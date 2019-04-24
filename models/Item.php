@@ -15,6 +15,7 @@
         private $dateTimeUpdated;
         private $expirationDate;
 
+        //Getters and setters
         public function getId(){
             return $this->id;
         }
