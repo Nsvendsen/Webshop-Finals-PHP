@@ -1,0 +1,8 @@
+#.htaccess file placed here to alter this directory and all subdirectories.
+# Makes urls more pretty.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteRule ^(.*$) ./item.php?q=$1 [L,QSA]
+</IfModule>

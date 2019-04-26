@@ -14,7 +14,7 @@ class PaymentInfo{
     private $zipCode;
     private $email;
     private $payment;
-    private $cardNumber;
+    private $cardNumber; //Hide last 4 digits? use in service: substr($paymentInfo->$cardNumber, 0, -4)."XXXX";
     private $cardExpirationDate;
     private $cvcNumber;
     private $userId;
