@@ -4,7 +4,7 @@
         //https://stackoverflow.com/questions/2190737/what-is-the-difference-between-mysql-mysqli-and-pdo
         // DB Information
         private $host = 'localhost';
-        private $db_name = 'Webshop';
+        private $db_name = 'webshop';
         private $username = 'root';
         private $password = 'root';
         private $conn;

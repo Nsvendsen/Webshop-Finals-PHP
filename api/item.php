@@ -1,26 +1,71 @@
 <?php
-    require_once '../services/ItemService.php';
-    include_once '../models/Item.php';
+    // require_once '../services/ItemService.php';
+    // include_once '../models/Item.php'; 
+
+    //Headers
+    // header("Access-Control-Allow-Origin: localhost:4200"); //Change to localhost:4200 or * or {$_SERVER['HTTP_ORIGIN']}
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
+    header('Access-Control-Allow-Headers: token, Content-Type');
+    header('Content-Type: application/json');
+
+
+    // //Might need to set more headers: https://stackoverflow.com/questions/8719276/cors-with-php-headers
+    // if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    //     header('Access-Control-Allow-Origin: *');
+    //     header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
+    //     header('Access-Control-Allow-Headers: token, Content-Type');
+    //     header('Access-Control-Max-Age: 1728000');
+    //     header('Content-Length: 0');
+    //     header('Content-Type: text/plain');
+    //     die();
+    // }
+    // header('Access-Control-Allow-Origin: *');
+    // header('Content-Type: application/json');
 
     /* Some things to consider:
         How do we make the actual endpoints? Use the _POST['nameOfInputField'] object?
+        What is the difference between URI and URL?
+        How do we use the model?
     */
 
-    $requestMethod = $_SERVER['REQUEST_METHOD'];
+    // https://stackoverflow.com/questions/9597052/how-to-retrieve-request-payload
+    $request_body = file_get_contents('php://input');
+    $data = json_decode($request_body);
+
+
+    $requestMethod = $_SERVER['REQUEST_METHOD']; //For example: GET
+    $requestURI = $_SERVER['REQUEST_URI']; //Webshop-Finals-PHP/api/item/1  1 is just an example.
+    $splitSlash = explode("/", $requestURI); //Split the string at every slash and create array. In this example: [Webshop-Finals-PHP, api, item, 1]
+    $itemId = end($splitSlash); //Get last element in the array.
+    // $query = parse_url($requestURI, PHP_URL_QUERY);
+    // var_dump(parse_url($requestURI, PHP_URL_PATH));
+
+    // $itemService = new ItemService();
 
     if($requestMethod == 'GET') {
-        // if(isset($_POST['submit'])) {    
-        //     $name = $_POST["name"];
+        // if(is_numeric($itemId)){ // Get one item.
+        //     $result = $itemService->getItemById($itemId);
+        //     echo json_encode($result);
+        //     return json_encode($result);
         // }
-
-        //TEST
-        $testItem = new Item();
-        $testItem->$name = "TEST";
-        echo $testItem->$name;
+        // else { // Get all items.
+        //     $result = $itemService->getAllItems();
+        //     return json_encode($result);
+        // }
     }
 
     if($requestMethod == 'POST') {
+        //json_decode();
+        // if(isset($_POST['submit'])) {    
+        //     $name = $_POST["name"];
+        // }
+        // print_r(json_decode($_POST)); //Test to view data
 
+        $filename = "somefile.txt";
+        // $content = "test";
+        file_put_contents($filename, $request_body); //json_decode($_POST)
+        // file_put_contents($filename, $_SERVER['HTTP_ORIGIN']);
     }
 
     if($requestMethod == 'PUT') {
