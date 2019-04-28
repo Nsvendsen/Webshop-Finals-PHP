@@ -1,5 +1,5 @@
 <?php
-    // require_once '../services/ItemService.php';
+    require_once '../services/ItemService.php';
     // include_once '../models/Item.php'; 
 
     //Headers
@@ -29,11 +29,6 @@
         How do we use the model?
     */
 
-    // https://stackoverflow.com/questions/9597052/how-to-retrieve-request-payload
-    $request_body = file_get_contents('php://input');
-    $data = json_decode($request_body);
-
-
     $requestMethod = $_SERVER['REQUEST_METHOD']; //For example: GET
     $requestURI = $_SERVER['REQUEST_URI']; //Webshop-Finals-PHP/api/item/1  1 is just an example.
     $splitSlash = explode("/", $requestURI); //Split the string at every slash and create array. In this example: [Webshop-Finals-PHP, api, item, 1]
@@ -41,31 +36,34 @@
     // $query = parse_url($requestURI, PHP_URL_QUERY);
     // var_dump(parse_url($requestURI, PHP_URL_PATH));
 
-    // $itemService = new ItemService();
+    $itemService = new ItemService();
 
     if($requestMethod == 'GET') {
-        // if(is_numeric($itemId)){ // Get one item.
-        //     $result = $itemService->getItemById($itemId);
-        //     echo json_encode($result);
-        //     return json_encode($result);
-        // }
-        // else { // Get all items.
-        //     $result = $itemService->getAllItems();
-        //     return json_encode($result);
-        // }
+        if(is_numeric($itemId)){ // Get one item.
+            $result = $itemService->getItemById($itemId);
+            echo json_encode($result);
+            return json_encode($result);
+        }
+        else { // Get all items.
+            $result = $itemService->getAllItems();
+            // $result = array_values($result);
+            echo json_encode($result);
+            return json_encode($result);
+        }
     }
 
     if($requestMethod == 'POST') {
-        //json_decode();
         // if(isset($_POST['submit'])) {    
         //     $name = $_POST["name"];
         // }
-        // print_r(json_decode($_POST)); //Test to view data
-
-        $filename = "somefile.txt";
-        // $content = "test";
-        file_put_contents($filename, $request_body); //json_decode($_POST)
-        // file_put_contents($filename, $_SERVER['HTTP_ORIGIN']);
+        
+        // https://stackoverflow.com/questions/9597052/how-to-retrieve-request-payload
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body);
+        $result = $itemService->createItem($data);
+        if($result){
+            return json_encode($result);
+        }
     }
 
     if($requestMethod == 'PUT') {

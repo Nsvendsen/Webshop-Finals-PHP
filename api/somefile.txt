@@ -1,1 +1,0 @@
-{"id":"","isActive":"","dateTimeCreated":"","dateTimeEdited":"","expirationDate":"2019-04-28T22:00:00.000Z","name":"test","inStock":200,"price":200,"description":"test123","category":"beautyproducts"}

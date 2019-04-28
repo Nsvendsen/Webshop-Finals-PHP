@@ -50,7 +50,7 @@
 
         function createItem($item){
             if($this->conn) {
-                $currentDateTime; //get current date. Find out how.
+                $currentDateTime = date('Y-m-d H:i:s'); // Get current date.
                 $sql = 'INSERT INTO '.$this->tableName.' (name, in_stock, price, description, is_active, category, expiration_date, date_time_created) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
                 $stmt = $this->conn->prepare($sql);
                 $success = $stmt->execute([$item->$name, $item->$inStock, $item->$price, $item->$description, $item->$isActive, $item->$category, $item->$expirationDate, $currentDateTime]);//use $ in front of obj variables? Alternatively use named parameters or bindParam/bindValue.

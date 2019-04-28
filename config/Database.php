@@ -13,9 +13,9 @@
         public function connect() {
             $this->conn = null;
             try {
-                $this->conn = new PDO('mysql:host=' . $this->host . ';dbname= ' . $this->db_name, $this->username, $this->password);
+                $this->conn = new PDO('mysql:host=' . $this->host . ';dbname=' . $this->db_name, $this->username, $this->password);
                 $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);//Maybe delete?
+                $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);// Solves this issue: https://stackoverflow.com/questions/13394263/force-php-json-encode-to-encode-indexes-as-strings
             }
             catch(PDOException $e) {
                 echo 'Connection Error: ' . $e->getMessage();
