@@ -34,7 +34,7 @@
     $requestURI = $_SERVER['REQUEST_URI']; //Webshop-Finals-PHP/api/item/1  1 is just an example.
     $splitSlash = explode("/", $requestURI); //Split the string at every slash and create array. In this example: [Webshop-Finals-PHP, api, item, 1]
     $itemId = end($splitSlash); //Get last element in the array.
-    // $query = parse_url($requestURI, PHP_URL_QUERY);
+    // $query = parse_url($requestURI, PHP_URL_QUERY); //Query params wont work using above approach!
     // var_dump(parse_url($requestURI, PHP_URL_PATH));
 
     $itemService = new ItemService();

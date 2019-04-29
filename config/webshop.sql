@@ -1,20 +1,26 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:8889
--- Generation Time: Apr 26, 2019 at 07:54 AM
--- Server version: 5.7.25
--- PHP Version: 7.3.1
+-- Host: localhost:3306
+-- Generation Time: Apr 29, 2019 at 09:18 AM
+-- Server version: 5.7.24-log
+-- PHP Version: 7.2.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
 --
--- Database: `Webshop`
+-- Database: `webshop`
 --
-CREATE DATABASE IF NOT EXISTS `Webshop` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `Webshop`;
 
 -- --------------------------------------------------------
 
@@ -25,15 +31,22 @@ USE `Webshop`;
 CREATE TABLE `items` (
   `id` bigint(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `in_stock` tinyint(1) NOT NULL,
+  `in_stock` int(11) NOT NULL,
   `price` float NOT NULL,
   `description` longtext NOT NULL,
-  `is_active` tinyint(1) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `category` varchar(255) NOT NULL,
   `date_time_created` datetime NOT NULL,
-  `date_time_updated` datetime NOT NULL,
-  `expiration_date` date NOT NULL
+  `date_time_updated` datetime DEFAULT NULL,
+  `expiration_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `items`
+--
+
+INSERT INTO `items` (`id`, `name`, `in_stock`, `price`, `description`, `is_active`, `category`, `date_time_created`, `date_time_updated`, `expiration_date`) VALUES
+(1, 'test', 100, 100, 'testdesc', 1, 'shoes', '2019-04-06 17:33:07', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -147,7 +160,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -195,3 +208,8 @@ ALTER TABLE `order_line`
 --
 ALTER TABLE `payment_info`
   ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
