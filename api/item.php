@@ -8,6 +8,7 @@
     header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
     header('Access-Control-Allow-Headers: token, Content-Type');
     header('Content-Type: application/json');
+    //Add http status 200 OK header
 
 
     // //Might need to set more headers: https://stackoverflow.com/questions/8719276/cors-with-php-headers
