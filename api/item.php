@@ -70,6 +70,7 @@
         // $theItem->fromAngularToDatabase($data); //Set Item object properties.
         $result = $itemService->createItem($data); //$theItem
         if($result) {
+            echo json_encode($result); //Remove later?
             return json_encode($result);
         }
     }

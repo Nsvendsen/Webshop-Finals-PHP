@@ -9,3 +9,9 @@
     else{
         echo "NO ID";
     }
+
+
+    $item = new Item();
+
+    $item->setName("Jakob");
+    echo $item->name;

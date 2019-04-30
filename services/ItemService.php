@@ -51,33 +51,41 @@
         function createItem($item){
             if($this->conn) {
                 // $dateTimeCreated = date('Y-m-d H:i:s'); // Get current date.
-                $sql = 'INSERT INTO items (name, in_stock, price, description, category) VALUES (?, ?, ?, ?, ?)';
-                // $sql = 'INSERT INTO '.$this->tableName.' (name, in_stock, price, description, category) VALUES (:name, :inStock, :price, :description, :category)'; 
+                // $sql = 'INSERT INTO items (name, in_stock, price, description, category) VALUES (?, ?, ?, ?, ?)';
+                $sql = 'INSERT INTO items (name, in_stock, price, description, category) VALUES (:name, :in_stock, :price, :description, :category)'; 
                 $stmt = $this->conn->prepare($sql);
-                $success = $stmt->execute([
-                    $item->name, 
-                    $item->inStock, 
-                    $item->price, 
-                    $item->description, 
-                    // $item->$isActive, 
-                    $item->category 
-                    // $item->$expirationDate, 
-                    // $currentDateTime
-                ]);//Positional parameters. use $ in front of obj variables? Alternatively use named parameters or bindParam/bindValue.
+                // Approach 1
                 // $success = $stmt->execute([
-                //     ':name'=>$item->$name, 
-                //     ':inStock'=>$item->$inStock, 
-                //     ':price'=>$item->$price, 
-                //     ':description'=>$item->$description, 
-                //     // ':isActive'=>$item->$isActive, //Add :isActive to the statement
-                //     ':category'=>$item->$category
-                //     // ':expirationDate'=>$item->$expirationDate, //Add :expirationDate to the statement
-                //     // ':dateTimeCreated'=>$dateTimeCreated
-                // ]); //Named parameters
+                //     $item->name, 
+                //     $item->inStock, 
+                //     $item->price, 
+                //     $item->description, 
+                //     // $item->$isActive, 
+                //     $item->category 
+                //     // $item->$expirationDate, 
+                //     // $currentDateTime
+                // ]);//Positional parameters. use $ in front of obj variables? Alternatively use named parameters or bindParam/bindValue.
 
-                // if($success) {
-                //     $newItem = $stmt->fetch();
-                // }
+                // Approach 2
+                $success = $stmt->execute([
+                    ':name' => $item->name, 
+                    ':in_stock' => $item->inStock, 
+                    ':price' => $item->price, 
+                    ':description' => $item->description, 
+                    // ':is_active'=>$item->$isActive, //Add :isActive to the statement
+                    ':category' => $item->category
+                    // ':expiration_date'=>$item->$expirationDate 
+                    // ':date_time_created'=>$dateTimeCreated //Datetime is now created automatically 
+                ]); //Named parameters
+
+                // Approach 3
+                // $stmt->bindParam();
+                // $success = $stmt->execute(); //Named parameters
+
+                if($success) {
+                    $newItemId = $this->conn->lastInsertId(); //Fetch the inserted object to get the object with an id.
+                    return $this->getItemById($newItemId);
+                }
             }
             // return $newItem;
         }
