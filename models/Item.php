@@ -1,7 +1,10 @@
 <?php
     class Item {
-        private $conn;
-        private $table = 'items';
+        /**
+         * We need to describe why we are using OOP. Does it make sense to do that?
+         */
+        // private $conn;
+        // private $table = 'items';
 
         //Item properties
         private $id;
@@ -14,6 +17,36 @@
         private $dateTimeCreated;
         private $dateTimeUpdated;
         private $expirationDate;
+
+        //Datebase tables is using the snake case convention.
+        public function fromDatabaseToAngular($item){
+            //Set Item properties
+            $this->id = $item->$id;
+            $this->name = $item->$name;
+            $this->inStock = $item->$in_stock;
+            $this->price = $item->$price;
+            $this->description = $item->$description;
+            $this->isActive = $item->$is_active;
+            $this->category = $item->$category;
+            $this->dateTimeCreated = $item->$date_time_created;
+            $this->dateTimeUpdated = $item->$date_time_updated;
+            $this->expirationDate = $item->$expiration_date;
+        }
+
+        //Angular and php models is using the camel case convention.
+        public function fromAngularToDatabase($item){
+            //Set Item properties
+            $this->id = $item->$id;
+            $this->name = $item->$name;
+            $this->inStock = $item->$inStock;
+            $this->price = $item->$price;
+            $this->description = $item->$description;
+            $this->isActive = $item->$isActive;
+            $this->category = $item->$category;
+            // $this->dateTimeCreated = $item->$dateTimeCreated;
+            // $this->dateTimeUpdated = $item->$dateTimeUpdated;
+            $this->expirationDate = $item->$expirationDate;
+        }
 
         //Getters and setters
         public function getId(){
