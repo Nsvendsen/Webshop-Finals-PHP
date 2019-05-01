@@ -52,7 +52,7 @@
             if($this->conn) {
                 // $dateTimeCreated = date('Y-m-d H:i:s'); // Get current date.
                 // $sql = 'INSERT INTO items (name, in_stock, price, description, category) VALUES (?, ?, ?, ?, ?)';
-                $sql = 'INSERT INTO items (name, in_stock, price, description, category) VALUES (:name, :in_stock, :price, :description, :category)'; 
+                $sql = 'INSERT INTO items (name, in_stock, price, description, is_active, category, expiration_date) VALUES (:name, :in_stock, :price, :description, :is_active, :category, :expiration_date)'; 
                 $stmt = $this->conn->prepare($sql);
                 // Approach 1
                 // $success = $stmt->execute([
@@ -72,9 +72,9 @@
                     ':in_stock' => $item->inStock, 
                     ':price' => $item->price, 
                     ':description' => $item->description, 
-                    // ':is_active'=>$item->$isActive, //Add :isActive to the statement
-                    ':category' => $item->category
-                    // ':expiration_date'=>$item->$expirationDate 
+                    ':is_active'=> 0, //$item->$isActive
+                    ':category' => $item->category,
+                    ':expiration_date'=>$item->$expirationDate 
                     // ':date_time_created'=>$dateTimeCreated //Datetime is now created automatically 
                 ]); //Named parameters
 

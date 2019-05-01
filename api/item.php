@@ -14,6 +14,8 @@
 
 
     // //Might need to set more headers: https://stackoverflow.com/questions/8719276/cors-with-php-headers
+    // 2 requests, options request made before the intended request: https://stackoverflow.com/questions/46904400/why-do-i-get-an-options-request-after-making-a-post-request
+    //Create function to reuse header code.
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
@@ -65,7 +67,7 @@
         $request_body = file_get_contents('php://input');
         // echo print_r($request_body);
         $data = json_decode($request_body);
-        // echo print_r($data);
+        // echo var_dump($data);
         // $theItem = new Item();
         // $theItem->fromAngularToDatabase($data); //Set Item object properties.
         $result = $itemService->createItem($data); //$theItem
