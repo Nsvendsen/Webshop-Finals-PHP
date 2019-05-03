@@ -24,12 +24,34 @@
         }
 
         // Item database functions
-        function getAllItems() {
+        function getAllItems() { //$queryParams
             if($this->conn) {
                 $sql = 'SELECT * FROM '.$this->tableName;
+                // if($queryParams) { 
+                //     $sqlWhere = false;
+                //     if($queryParams['is_active']) {
+                //         $sql = $sql.' WHERE is_active = :is_active';
+                //         $sqlWhere = true;
+                //     }
+                //     else if ($queryParams['category']) {
+                //         if($sqlWhere) {
+                //             $sql = $sql.' AND';
+                //         }
+                //         else {
+                //             $sql = $sql.' WHERE';
+                //         }
+                //         $sql = $sql.' category = :category';
+                //     }
+                //     else if ($queryParams['sort']) {
+                //         $sql = $sql.' ORDER BY :order_by';
+                //     }
+                    // else if ($queryParams['page']) { // Remember pagination
+                    //     $sql = $sql.' ORDER BY :order_by';
+                    // }
+                // }
                 $stmt = $this->conn->prepare($sql);
-                $success = $stmt->execute();
-                if($success){
+                $success = $stmt->execute(); //$queryParams
+                if($success) {
                     $items = $stmt->fetchAll();
                 }
             }
@@ -41,7 +63,7 @@
                 $sql = 'SELECT * FROM '.$this->tableName.' WHERE id = ? LIMIT 1';
                 $stmt = $this->conn->prepare($sql);
                 $success = $stmt->execute([$itemId]);
-                if($success){
+                if($success) {
                     $item = $stmt->fetch();
                 }
             }
@@ -52,7 +74,7 @@
             if($this->conn) {
                 // $dateTimeCreated = date('Y-m-d H:i:s'); // Get current date.
                 // $sql = 'INSERT INTO items (name, in_stock, price, description, category) VALUES (?, ?, ?, ?, ?)';
-                $sql = 'INSERT INTO items (name, in_stock, price, description, is_active, category, expiration_date) VALUES (:name, :in_stock, :price, :description, :is_active, :category, :expiration_date)'; 
+                $sql = 'INSERT INTO items (name, in_stock, price, description, is_active, category) VALUES (:name, :in_stock, :price, :description, :is_active, :category)'; 
                 $stmt = $this->conn->prepare($sql);
                 // Approach 1
                 // $success = $stmt->execute([
@@ -66,6 +88,7 @@
                 //     // $currentDateTime
                 // ]);//Positional parameters. use $ in front of obj variables? Alternatively use named parameters or bindParam/bindValue.
 
+                // echo $item->isActive;
                 // Approach 2
                 $success = $stmt->execute([
                     ':name' => $item->name, 
@@ -77,7 +100,7 @@
                     ':expiration_date'=>$item->expirationDate
                     // ':date_time_created'=>$dateTimeCreated //Datetime is now created automatically 
                 ]); //Named parameters
-
+                
                 // Approach 3
                 // $stmt->bindParam();
                 // $success = $stmt->execute(); //Named parameters
@@ -96,7 +119,7 @@
                 $sql = 'DELETE FROM '.$this->tableName.' WHERE id = :id LIMIT 1'; //Named parameters
                 $stmt = $this->conn->prepare($sql);
                 // $success = $stmt->execute([$itemId]); //Positional parameters
-                $success = $stmt->execute([':id'=>$itemId]); //Named parameters
+                $success = $stmt->execute([':id' => $itemId]); //Named parameters
             }
             return $success; // true or false
         }
@@ -106,12 +129,13 @@
                 $currentDateTime = date('Y-m-d H:i:s'); // Get current date.
                 $sql = 'UPDATE '.$this->tableName.' SET name = ?, in_stock = ?, price = ?, description = ?, is_active = ?, category = ?, expiration_date = ?, date_time_updated = ? WHERE id = ?';
                 $stmt = $this->conn->prepare($sql);
-                $success = $stmt->execute([$item->$name, $item->$inStock, $item->$price, $item->$description, $item->$isActive, $item->$category, $item->$expirationDate, $currentDateTime, $item->$id]);//use $ in front of obj variables? Alternatively use named parameters or bindParam/bindValue.
+                $success = $stmt->execute([$item->name, $item->inStock, $item->price, $item->description, $item->isActive, $item->category, $item->expirationDate, $currentDateTime, $item->id]);//use $ in front of obj variables? Alternatively use named parameters or bindParam/bindValue.
                 if($success) {
-                    $updatedItem = $stmt->fetch();
+                    // $updatedItem = $stmt->fetch();
+                    return $success;
                 }
             }
-            return $updatedItem;
+            // return $updatedItem;
         }
 
         function getItemsByCategory($category) {
