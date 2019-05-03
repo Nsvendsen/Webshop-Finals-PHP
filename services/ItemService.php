@@ -72,9 +72,9 @@
                     ':in_stock' => $item->inStock, 
                     ':price' => $item->price, 
                     ':description' => $item->description, 
-                    ':is_active'=> 0, //$item->$isActive
+                    ':is_active'=> $item->isActive,
                     ':category' => $item->category,
-                    ':expiration_date'=>$item->$expirationDate 
+                    ':expiration_date'=>$item->expirationDate
                     // ':date_time_created'=>$dateTimeCreated //Datetime is now created automatically 
                 ]); //Named parameters
 

@@ -24,11 +24,11 @@ $userService = new UserService();
 if($requestMethod == 'GET') {
     if(is_numeric($userId)){
         $result = $userService->getUserById($userId);
-        echo json_encode($result);
+        //echo json_encode($result);
         return json_encode($result);
     }else{
         $result = $userService->getAllUsers();
-        echo json_encode($result);
+        //echo json_encode($result);
         return json_encode($result);
     }
 }

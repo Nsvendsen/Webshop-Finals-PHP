@@ -1,7 +1,5 @@
 <?php
 class User{
-    private $conn;
-    private $table ='users';
 
     //user properties
     private $id;
@@ -13,6 +11,17 @@ class User{
     private $confirmedEmail;
     private $gender;
 
+    public function fromAngularToDatabase($user){
+        //Set Item properties
+        $this->id = $user->$id;
+        $this->firstName = $user->$firstName;
+        $this->lastName = $user->$lastName;
+        $this->address = $user->$address;
+        $this->zipCode = $user->$zipCode;
+        $this->email = $user->$email;
+        $this->confirmedEmail = $user->$confirmedEmail;
+        $this->gender = $user->$gender;
+    }
 
     public function getId()
     {

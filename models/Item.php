@@ -8,7 +8,7 @@
 
         //Item properties
         private $id;
-        public $name;
+        private $name;
         private $inStock;
         private $price;
         private $description;
