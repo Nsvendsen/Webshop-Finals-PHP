@@ -38,7 +38,7 @@
             $product['productVariations'] = $variationArray; //Add the variation array to the product.
 
             echo json_encode($product);
-            return json_encode($product);
+            return json_encode($product); //Convert from php array to json
         }
         else { // Get all products.
             $result = $productService->getAllProducts(); //Get all products.
@@ -49,7 +49,7 @@
                 array_push($productArray, $product); //Add to array.
             }
             echo json_encode($productArray);
-            return json_encode($productArray);
+            return json_encode($productArray); //Convert from php array to json
         }
     }
 
@@ -59,31 +59,30 @@
         // }
         
         // https://stackoverflow.com/questions/9597052/how-to-retrieve-request-payload
-        $request_body = file_get_contents('php://input');
-        // echo print_r($request_body);
-        $data = json_decode($request_body);
-        // echo var_dump($data);
-        // $theProduct = new Product();
-        // $theProduct->fromAngularToDatabase($data); //Set Product object properties.
-        $result = $productService->createProduct($data); //$theProduct
+        $request_body = file_get_contents('php://input'); //Get form data.
+        $data = json_decode($request_body); //Convert from json to php array.
+        
+        $result = $productService->createProduct($data); //Create product in the database.
         if($result) {
-            echo json_encode($result); //Remove later?
-            return json_encode($result);
+            $product = $productService->convertToProductArray($result); //Convert attribute names to camel case.
+            echo json_encode($product); //Remove later?
+            return json_encode($product); //Convert from php array to json.
         }
     }
 
     if($requestMethod == 'PUT') {
         if (is_numeric($productId)) {
-            $request_body = file_get_contents('php://input');
-            $data = json_decode($request_body);
-            $result = $productService->updateProductById($data); //Id is also passed inside the object, so no need to pass $productId.
-            return json_encode($result);
+            $request_body = file_get_contents('php://input'); //Get form data.
+            $data = json_decode($request_body); //Convert from json to php array.
+            $result = $productService->updateProductById($data); //Update product in the database.
+            //Make if $result?
+            return json_encode($result); //Convert from php array to json.
         }
     }
 
     if($requestMethod == 'DELETE') {
         if (is_numeric($productId)) {
-            $result = $productService->deleteProductById($productId); //Id is also passed inside the object, so no need to pass $productId.
-            return json_encode($result); 
+            $result = $productService->deleteProductById($productId); //Delete product in the database.
+            return json_encode($result); //Convert from php array to json.
         }
     }
