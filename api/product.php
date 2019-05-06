@@ -26,42 +26,30 @@
 
     if($requestMethod == 'GET') {
         if(is_numeric($productId)){ // Get one product.
-            // $productResult = $productService->getProductById($productId);
-            // $product = new Product($productResult);
+            $productResult = $productService->getProductById($productId); //Get product from the database.
+            $product = $productService->convertToProductArray($productResult); //Convert attribute names to camel case.
             
-            // $productVariationResult = $productVariationService->getProductVariationsByProductId($productId);
-            // $variationArray = [];
-            // foreach($productVariationResult as $variation){
-            //     $productVariation = new ProductVariation($variation);
-            //     array_push($variationArray, $productVariation);
-            // }
-            // $product->setProductVariations($variationArray);
-
-            // echo json_encode($product);
-            // return json_encode($product);
-
-            $productResult = $productService->getProductById($productId);
-            $product = $productService->convertToProductArray($productResult);
-            
-            $productVariationResult = $productVariationService->getProductVariationsByProductId($productId);
-            $variationArray = [];
-            foreach($productVariationResult as $variation){
-                $productVariation = $productVariationService->convertToProductVariationArray($variation);
-                array_push($variationArray, $productVariation);
+            $productVariationResult = $productVariationService->getProductVariationsByProductId($productId); //Get all variations for the product.
+            $variationArray = []; //Empty array to contain the product variations.
+            foreach($productVariationResult as $variation) { //Loop through the variations.
+                $productVariation = $productVariationService->convertToProductVariationArray($variation); //Convert attribute names to camel case.
+                array_push($variationArray, $productVariation); //Add to array.
             }
-            $product['productVariations'] = $variationArray;
-            // array_push($product, $variationArray);
+            $product['productVariations'] = $variationArray; //Add the variation array to the product.
 
-            // print_r($productVariationResult);
-            // print_r($variationArray);
             echo json_encode($product);
             return json_encode($product);
         }
         else { // Get all products.
-            $result = $productService->getAllProducts();
-            // $result = array_values($result);
-            echo json_encode($result);
-            return json_encode($result);
+            $result = $productService->getAllProducts(); //Get all products.
+
+            $productArray = []; //Empty array to contain the products.
+            foreach($result as $prod) { //Loop through the products.
+                $product = $productService->convertToProductArray($prod); //Convert attribute names to camel case.
+                array_push($productArray, $product); //Add to array.
+            }
+            echo json_encode($productArray);
+            return json_encode($productArray);
         }
     }
 
