@@ -67,24 +67,18 @@
 
         function createProduct($product){
             if($this->conn) {
-                // $dateTimeCreated = date('Y-m-d H:i:s'); // Get current date.
-                // $sql = 'INSERT INTO products (name, in_stock, price, description, category) VALUES (?, ?, ?, ?, ?)';
-                $sql = 'INSERT INTO products (name, in_stock, price, description, is_active, category) VALUES (:name, :in_stock, :price, :description, :is_active, :category)'; 
+                $sql = 'INSERT INTO products (name, price, description, is_active, category) VALUES (:name, :price, :description, :is_active, :category)'; 
                 $stmt = $this->conn->prepare($sql);
                 $success = $stmt->execute([
                     ':name' => $product->name, 
-                    ':in_stock' => $product->inStock, 
                     ':price' => $product->price, 
                     ':description' => $product->description, 
                     ':is_active'=> $product->isActive,
-                    ':category' => $product->category,
-                    ':expiration_date'=>$product->expirationDate
-                    // ':date_time_created'=>$dateTimeCreated //Datetime is now created automatically 
-                ]); //Named parameters
+                    ':category' => $product->category
+                    // ':active_from_date'=>$product->activeFromDate,
+                    // ':expiration_date'=>$product->expirationDate
                 
-                // Approach 3
-                // $stmt->bindParam();
-                // $success = $stmt->execute(); //Named parameters
+                ]); //Named parameters
 
                 if($success) {
                     $newProductId = $this->conn->lastInsertId(); //Fetch the inserted object to get the object with an id.
