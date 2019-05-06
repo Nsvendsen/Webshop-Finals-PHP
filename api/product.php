@@ -25,7 +25,7 @@
     $productVariationService = new ProductVariationService();
 
     if($requestMethod == 'GET') {
-        if(is_numeric($productId)){ // Get one product.
+        if(is_numeric($productId)){ // Get one product and all its variants.
             $productResult = $productService->getProductById($productId); //Get product from the database.
             $product = $productService->convertToProductArray($productResult); //Convert attribute names to camel case.
             
@@ -40,7 +40,7 @@
             echo json_encode($product);
             return json_encode($product); //Convert from php array to json
         }
-        else { // Get all products.
+        else { // Get all products but not their variants.
             $result = $productService->getAllProducts(); //Get all products.
 
             $productArray = []; //Empty array to contain the products.
