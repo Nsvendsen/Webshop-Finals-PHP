@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 29, 2019 at 09:18 AM
+-- Generation Time: May 04, 2019 at 02:51 PM
 -- Server version: 5.7.24-log
 -- PHP Version: 7.2.10
 
@@ -25,28 +25,25 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `items`
+-- Table structure for table `categories`
 --
 
-CREATE TABLE `items` (
+CREATE TABLE `categories` (
   `id` bigint(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `in_stock` int(11) NOT NULL,
-  `price` float NOT NULL,
-  `description` longtext NOT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `category` varchar(255) NOT NULL,
-  `date_time_created` datetime NOT NULL,
-  `date_time_updated` datetime DEFAULT NULL,
-  `expiration_date` date DEFAULT NULL
+  `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `items`
+-- Table structure for table `category_attributes`
 --
 
-INSERT INTO `items` (`id`, `name`, `in_stock`, `price`, `description`, `is_active`, `category`, `date_time_created`, `date_time_updated`, `expiration_date`) VALUES
-(1, 'test', 100, 100, 'testdesc', 1, 'shoes', '2019-04-06 17:33:07', NULL, NULL);
+CREATE TABLE `category_attributes` (
+  `id` bigint(11) NOT NULL,
+  `category_id` bigint(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -56,23 +53,23 @@ INSERT INTO `items` (`id`, `name`, `in_stock`, `price`, `description`, `is_activ
 
 CREATE TABLE `orders` (
   `id` bigint(11) NOT NULL,
-  `order_state` int(11) NOT NULL,
-  `payment_info_id` bigint(11) NOT NULL
+  `payment_info_id` bigint(11) NOT NULL,
+  `order_state` int(11) NOT NULL DEFAULT '0',
+  `date_time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_time_payed` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `order_line`
+-- Table structure for table `order_lines`
 --
 
-CREATE TABLE `order_line` (
+CREATE TABLE `order_lines` (
   `id` bigint(11) NOT NULL,
-  `added_to_cart` date NOT NULL,
-  `refunded` tinyint(1) NOT NULL,
-  `refunded_at` date NOT NULL,
+  `product_variation_id` bigint(11) NOT NULL,
   `order_id` bigint(11) NOT NULL,
-  `item_id` bigint(11) NOT NULL
+  `date_time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -83,18 +80,75 @@ CREATE TABLE `order_line` (
 
 CREATE TABLE `payment_info` (
   `id` bigint(11) NOT NULL,
+  `user_id` bigint(11) DEFAULT NULL,
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
-  `phone_number` int(50) NOT NULL,
+  `phone_number` varchar(255) NOT NULL,
   `country` varchar(255) NOT NULL,
-  `zip_code` int(20) NOT NULL,
+  `zip_code` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `payment` varchar(255) NOT NULL,
-  `card_number` int(30) NOT NULL,
-  `card_expiration_date` date NOT NULL,
-  `cvc_number` int(4) NOT NULL,
-  `user_id` bigint(11) DEFAULT NULL
+  `card_type` varchar(255) NOT NULL,
+  `card_number` int(11) NOT NULL,
+  `card_expiration_date` varchar(255) NOT NULL,
+  `cvc_number` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `id` bigint(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `category_id` bigint(11) NOT NULL,
+  `date_time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `active_from_date` date DEFAULT NULL,
+  `expiration_date` date DEFAULT NULL,
+  `description` longtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_variations`
+--
+
+CREATE TABLE `product_variations` (
+  `id` bigint(11) NOT NULL,
+  `in_stock` int(11) NOT NULL,
+  `sku` varchar(255) NOT NULL,
+  `product_id` bigint(11) NOT NULL,
+  `price` int(11) NOT NULL,
+  `discount_percent` int(2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_variation_attributes`
+--
+
+CREATE TABLE `product_variation_attributes` (
+  `id` bigint(11) NOT NULL,
+  `category_attribute_id` bigint(11) NOT NULL,
+  `product_variation_id` bigint(11) NOT NULL,
+  `value` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_variation_images`
+--
+
+CREATE TABLE `product_variation_images` (
+  `id` bigint(11) NOT NULL,
+  `product_variation_id` bigint(11) NOT NULL,
+  `url` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -105,13 +159,14 @@ CREATE TABLE `payment_info` (
 
 CREATE TABLE `users` (
   `id` bigint(11) NOT NULL,
-  `first_name` varchar(25) NOT NULL,
-  `last_name` varchar(25) NOT NULL,
-  `address` varchar(100) NOT NULL,
-  `zip_code` int(10) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `zip_code` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
-  `confirmed_email` tinyint(1) NOT NULL,
-  `gender` tinyint(1) NOT NULL
+  `confirmed_email` tinyint(1) NOT NULL DEFAULT '0',
+  `gender` tinyint(1) DEFAULT NULL,
+  `date_time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -119,10 +174,17 @@ CREATE TABLE `users` (
 --
 
 --
--- Indexes for table `items`
+-- Indexes for table `categories`
 --
-ALTER TABLE `items`
+ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `category_attributes`
+--
+ALTER TABLE `category_attributes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category_id` (`category_id`);
 
 --
 -- Indexes for table `orders`
@@ -132,12 +194,12 @@ ALTER TABLE `orders`
   ADD KEY `payment_info_id` (`payment_info_id`);
 
 --
--- Indexes for table `order_line`
+-- Indexes for table `order_lines`
 --
-ALTER TABLE `order_line`
+ALTER TABLE `order_lines`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `item_id` (`item_id`);
+  ADD KEY `product_variation_id` (`product_variation_id`),
+  ADD KEY `order_id` (`order_id`);
 
 --
 -- Indexes for table `payment_info`
@@ -147,20 +209,56 @@ ALTER TABLE `payment_info`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category` (`category_id`);
+
+--
+-- Indexes for table `product_variations`
+--
+ALTER TABLE `product_variations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `product_variation_attributes`
+--
+ALTER TABLE `product_variation_attributes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category_attribute_id` (`category_attribute_id`),
+  ADD KEY `product_variation` (`product_variation_id`);
+
+--
+-- Indexes for table `product_variation_images`
+--
+ALTER TABLE `product_variation_images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `prod_variation` (`product_variation_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `items`
+-- AUTO_INCREMENT for table `categories`
 --
-ALTER TABLE `items`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `categories`
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `category_attributes`
+--
+ALTER TABLE `category_attributes`
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -169,15 +267,39 @@ ALTER TABLE `orders`
   MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `order_line`
+-- AUTO_INCREMENT for table `order_lines`
 --
-ALTER TABLE `order_line`
+ALTER TABLE `order_lines`
   MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payment_info`
 --
 ALTER TABLE `payment_info`
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `product_variations`
+--
+ALTER TABLE `product_variations`
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `product_variation_attributes`
+--
+ALTER TABLE `product_variation_attributes`
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `product_variation_images`
+--
+ALTER TABLE `product_variation_images`
   MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -191,23 +313,54 @@ ALTER TABLE `users`
 --
 
 --
+-- Constraints for table `category_attributes`
+--
+ALTER TABLE `category_attributes`
+  ADD CONSTRAINT `category_id` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
+
+--
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `payment_info_id` FOREIGN KEY (`payment_info_id`) REFERENCES `orders` (`id`);
+  ADD CONSTRAINT `payment_info_id` FOREIGN KEY (`payment_info_id`) REFERENCES `payment_info` (`id`);
 
 --
--- Constraints for table `order_line`
+-- Constraints for table `order_lines`
 --
-ALTER TABLE `order_line`
-  ADD CONSTRAINT `item_id` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`),
-  ADD CONSTRAINT `order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
+ALTER TABLE `order_lines`
+  ADD CONSTRAINT `order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+  ADD CONSTRAINT `product_variation_id` FOREIGN KEY (`product_variation_id`) REFERENCES `product_variations` (`id`);
 
 --
 -- Constraints for table `payment_info`
 --
 ALTER TABLE `payment_info`
   ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
+
+--
+-- Constraints for table `product_variations`
+--
+ALTER TABLE `product_variations`
+  ADD CONSTRAINT `product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `product_variation_attributes`
+--
+ALTER TABLE `product_variation_attributes`
+  ADD CONSTRAINT `category_attribute_id` FOREIGN KEY (`category_attribute_id`) REFERENCES `category_attributes` (`id`),
+  ADD CONSTRAINT `product_variation` FOREIGN KEY (`product_variation_id`) REFERENCES `product_variations` (`id`);
+
+--
+-- Constraints for table `product_variation_images`
+--
+ALTER TABLE `product_variation_images`
+  ADD CONSTRAINT `prod_variation` FOREIGN KEY (`product_variation_id`) REFERENCES `product_variations` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
