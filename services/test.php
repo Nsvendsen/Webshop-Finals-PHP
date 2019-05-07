@@ -16,8 +16,11 @@
     // $item->setName("Jakob");
     // echo $item->name;
 
-    $requestURI = $_SERVER['REQUEST_URI'];
-    $query = parse_url($requestURI, PHP_URL_QUERY);
-    // echo $query;
-    parse_str($query, $output);
-    var_dump($output);
+    // $requestURI = $_SERVER['REQUEST_URI'];
+    // $query = parse_url($requestURI, PHP_URL_QUERY);
+    // // echo $query;
+    // parse_str($query, $output);
+    // var_dump($output);
+
+    $arr = [1,2,3,4,5];
+    echo json_encode($arr);

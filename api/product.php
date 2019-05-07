@@ -1,8 +1,7 @@
 <?php
     require_once '../services/ProductService.php';
     require_once '../services/ProductVariationService.php';
-    require_once '../models/Product.php'; 
-    require_once '../models/ProductVariation.php'; 
+    require_once '../services/ProductVariationAttributeService.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         header('Access-Control-Allow-Origin: *');
@@ -21,32 +20,40 @@
     $splitSlash = explode("/", $requestURI); //Split the string at every slash and create array. In this example: [Webshop-Finals-PHP, api, product, 1]
     $productId = end($splitSlash); //Get last element in the array.
 
-    $productService = new ProductService();
-    $productVariationService = new ProductVariationService();
+    $pService = new ProductService();
+    $pvService = new ProductVariationService();
+    $pvaService = new ProductVariationAttributeService();
 
     if($requestMethod == 'GET') {
-        if(is_numeric($productId)){ // Get one product and all its variants.
-            $productResult = $productService->getProductById($productId); //Get product from the database.
-            $product = $productService->convertToProductArray($productResult); //Convert attribute names to camel case.
+        if(is_numeric($productId)){ // Get one product, all its variants and attributes.
+            $productResult = $pService->getProductById($productId); //Get product from the database.
+            $product = $pService->convertToProductArray($productResult); //Convert attribute names to camel case.
             
-            $productVariationResult = $productVariationService->getProductVariationsByProductId($productId); //Get all variations for the product.
-            $variationArray = []; //Empty array to contain the product variations.
-            foreach($productVariationResult as $variation) { //Loop through the variations.
-                $productVariation = $productVariationService->convertToProductVariationArray($variation); //Convert attribute names to camel case.
-                // $productVariation['price'] /= 100; //Divide price by 100 to get kroner instead of oere.
-                array_push($variationArray, $productVariation); //Add to array.
+            $pvResult = $pvService->getProductVariationsByProductId($productId); //Get all variations for the product.
+            $pvArray = []; //Empty array to contain the product variations.
+            foreach($pvResult as $variation) { //Loop through the variations.
+                $pvaResult = $pvaService->getProductVariationAttributesByProductVariationId($variation->id); //Get all attributes for the variation.
+                $pvaArray = []; //Empty array to contain the product variation attributes.
+                foreach($pvaResult as $attribute) { //Loop through the attributes.
+                    $productVariationAttribute = $pvaService->convertToProductVariationAttributeArray($attribute); //Convert attribute names to camel case.
+                    array_push($pvaArray, $productVariationAttribute); //Add to array.
+                }
+
+                $productVariation = $pvService->convertToProductVariationArray($variation); //Convert attribute names to camel case.
+                $productVariation['productVariationAttributes'] = $pvaArray; //Add the attribute array to the variation.
+                array_push($pvArray, $productVariation); //Add to array.
             }
-            $product['productVariations'] = $variationArray; //Add the variation array to the product.
+            $product['productVariations'] = $pvArray; //Add the variation array to the product.
 
             echo json_encode($product);
             return json_encode($product); //Convert from php array to json
         }
         else { // Get all products but not their variants.
-            $result = $productService->getAllProducts(); //Get all products.
+            $result = $pService->getAllProducts(); //Get all products.
 
             $productArray = []; //Empty array to contain the products.
             foreach($result as $prod) { //Loop through the products.
-                $product = $productService->convertToProductArray($prod); //Convert attribute names to camel case.
+                $product = $pService->convertToProductArray($prod); //Convert attribute names to camel case.
                 array_push($productArray, $product); //Add to array.
             }
             echo json_encode($productArray);
@@ -63,9 +70,9 @@
         $request_body = file_get_contents('php://input'); //Get form data.
         $data = json_decode($request_body); //Convert from json to php array.
         
-        $result = $productService->createProduct($data); //Create product in the database.
+        $result = $pService->createProduct($data); //Create product in the database.
         if($result) {
-            $product = $productService->convertToProductArray($result); //Convert attribute names to camel case.
+            $product = $pService->convertToProductArray($result); //Convert attribute names to camel case.
             echo json_encode($product); //Remove later?
             return json_encode($product); //Convert from php array to json.
         }
@@ -75,7 +82,7 @@
         if (is_numeric($productId)) {
             $request_body = file_get_contents('php://input'); //Get form data.
             $data = json_decode($request_body); //Convert from json to php array.
-            $result = $productService->updateProductById($data); //Update product in the database.
+            $result = $pService->updateProductById($data); //Update product in the database.
             //Make if $result?
             return json_encode($result); //Convert from php array to json.
         }
@@ -83,7 +90,7 @@
 
     if($requestMethod == 'DELETE') {
         if (is_numeric($productId)) {
-            $result = $productService->deleteProductById($productId); //Delete product in the database.
+            $result = $pService->deleteProductById($productId); //Delete product in the database.
             return json_encode($result); //Convert from php array to json.
         }
     }

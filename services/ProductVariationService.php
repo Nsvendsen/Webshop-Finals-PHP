@@ -21,13 +21,13 @@
 
         function convertToProductVariationArray($productVariation){
             //Set ProductVariation properties
-            $productArray = [
+            $variationArray = [
                 'id' => $productVariation->id,
                 'sku' => $productVariation->sku,
                 'inStock' => $productVariation->in_stock,
                 'discountPercent' => $productVariation->discount_percent
             ];
-            return $productArray;
+            return $variationArray;
         }
 
         // ProductVariation database functions
