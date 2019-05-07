@@ -33,6 +33,7 @@
             $variationArray = []; //Empty array to contain the product variations.
             foreach($productVariationResult as $variation) { //Loop through the variations.
                 $productVariation = $productVariationService->convertToProductVariationArray($variation); //Convert attribute names to camel case.
+                // $productVariation['price'] /= 100; //Divide price by 100 to get kroner instead of oere.
                 array_push($variationArray, $productVariation); //Add to array.
             }
             $product['productVariations'] = $variationArray; //Add the variation array to the product.
