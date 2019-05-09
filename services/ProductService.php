@@ -19,16 +19,17 @@
             $this->conn = $db->connect();
         }
 
-        //Database tables are using the snake case convention. Objects are using the camel case convention.
+        //Database tables are using the snake case convention. Objects are using the camel case convention. 
         function convertToProductArray($product) {
             //Set Product properties
             $productArray = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'description' => $product->description,
-                'isActive' => $product->is_active,
+                'isActive' => (int)$product->is_active, //Might fail
                 'category' => $product->category,
                 'price' => $product->price,
+                'discountPercent' => $product->discount_percent,
                 'dateTimeCreated' => $product->date_time_created,
                 'dateTimeUpdated' => $product->date_time_updated,
                 'activeFromDate' => $product->active_from_date,
@@ -58,7 +59,7 @@
                 $sql = 'SELECT * FROM products WHERE id = ? LIMIT 1';
                 $stmt = $this->conn->prepare($sql);
                 $success = $stmt->execute([$productId]);
-                if($success) {
+                if($success) { // true or false
                     $product = $stmt->fetch();
                 }
             }

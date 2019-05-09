@@ -1,7 +1,7 @@
 <?php
     require_once '../services/ProductService.php';
     require_once '../services/ProductVariationService.php';
-    require_once '../services/ProductVariationAttributeService.php';
+    // require_once '../services/ProductVariationAttributeService.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         header('Access-Control-Allow-Origin: *');
@@ -22,7 +22,7 @@
 
     $pService = new ProductService();
     $pvService = new ProductVariationService();
-    $pvaService = new ProductVariationAttributeService();
+    // $pvaService = new ProductVariationAttributeService();
 
     if($requestMethod == 'GET') {
         if(is_numeric($productId)){ // Get one product, all its variants and attributes.
@@ -32,15 +32,16 @@
             $pvResult = $pvService->getProductVariationsByProductId($productId); //Get all variations for the product.
             $pvArray = []; //Empty array to contain the product variations.
             foreach($pvResult as $variation) { //Loop through the variations.
-                $pvaResult = $pvaService->getProductVariationAttributesByProductVariationId($variation->id); //Get all attributes for the variation.
-                $pvaArray = []; //Empty array to contain the product variation attributes.
-                foreach($pvaResult as $attribute) { //Loop through the attributes.
-                    $productVariationAttribute = $pvaService->convertToProductVariationAttributeArray($attribute); //Convert attribute names to camel case.
-                    array_push($pvaArray, $productVariationAttribute); //Add to array.
-                }
+                // Get product_images instead of attributes, but use same approach?
+                // $pvaResult = $pvaService->getProductVariationAttributesByProductVariationId($variation->id); //Get all attributes for the variation.
+                // $pvaArray = []; //Empty array to contain the product variation attributes.
+                // foreach($pvaResult as $attribute) { //Loop through the attributes.
+                //     $productVariationAttribute = $pvaService->convertToProductVariationAttributeArray($attribute); //Convert attribute names to camel case.
+                //     array_push($pvaArray, $productVariationAttribute); //Add to array.
+                // }
 
                 $productVariation = $pvService->convertToProductVariationArray($variation); //Convert attribute names to camel case.
-                $productVariation['productVariationAttributes'] = $pvaArray; //Add the attribute array to the variation.
+                // $productVariation['productVariationAttributes'] = $pvaArray; //Add the attribute array to the variation.
                 array_push($pvArray, $productVariation); //Add to array.
             }
             $product['productVariations'] = $pvArray; //Add the variation array to the product.

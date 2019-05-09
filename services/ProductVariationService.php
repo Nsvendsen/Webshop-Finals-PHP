@@ -25,7 +25,7 @@
                 'id' => $productVariation->id,
                 'sku' => $productVariation->sku,
                 'inStock' => $productVariation->in_stock,
-                'discountPercent' => $productVariation->discount_percent
+                'size' => $productVariation->size
             ];
             return $variationArray;
         }
