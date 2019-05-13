@@ -91,21 +91,19 @@
 
         function deleteProductById($productId) {
             if($this->conn) {
-                // $sql = 'DELETE FROM '.$this->tableName.' WHERE id = ? LIMIT 1'; //Positional parameters
-                $sql = 'DELETE FROM '.$this->tableName.' WHERE id = :id LIMIT 1'; //Named parameters
+                $sql = 'DELETE FROM products WHERE id = ? LIMIT 1'; //Positional parameters
                 $stmt = $this->conn->prepare($sql);
-                // $success = $stmt->execute([$productId]); //Positional parameters
-                $success = $stmt->execute([':id' => $productId]); //Named parameters
+                $success = $stmt->execute([$productId]); //Positional parameters
             }
             return $success; // true or false
         }
 
         function updateProductById($product) {
             if($this->conn) {
-                $currentDateTime = date('Y-m-d H:i:s'); // Get current date.
-                $sql = 'UPDATE '.$this->tableName.' SET name = ?, in_stock = ?, price = ?, description = ?, is_active = ?, category = ?, expiration_date = ?, date_time_updated = ? WHERE id = ?';
+                // $currentDateTime = date('Y-m-d H:i:s'); // Get current date.
+                $sql = 'UPDATE products SET name = ?, price = ?, description = ?, is_active = ?, category = ? WHERE id = ?';
                 $stmt = $this->conn->prepare($sql);
-                $success = $stmt->execute([$product->name, $product->inStock, $product->price, $product->description, $product->isActive, $product->category, $product->expirationDate, $currentDateTime, $product->id]);//use $ in front of obj variables? Alternatively use named parameters or bindParam/bindValue.
+                $success = $stmt->execute([$product->name, $product->price, $product->description, $product->isActive, $product->category, $product->id]);//some things removed.
                 if($success) {
                     // $updatedProduct = $stmt->fetch();
                     return $success;
