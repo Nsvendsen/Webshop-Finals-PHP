@@ -61,15 +61,23 @@
 
         function createProductVariation($productVariation) {
             if($this->conn) {
-                $sql = 'INSERT INTO product_variations (in_stock, sku, product_id, discount_percent) VALUES (:in_stock, :sku, :product_id, :discount_percent)'; 
+                $sql = 'INSERT INTO product_variations (in_stock, sku, product_id, size) VALUES (:in_stock, :sku, :product_id, :size)'; 
                 $stmt = $this->conn->prepare($sql);
                 $success = $stmt->execute([
                     ':in_stock' => $productVariation->inStock, 
                     ':sku' => $productVariation->sku, 
-                    ':product_id' => $productVariation->productId, 
-                    // ':price' => $productVariation->price,
-                    ':discount_percent'=> $productVariation->discountPercent
+                    ':product_id' => $productVariation->productId,
+                    ':size' => $productVariation->size
                 ]); //Named parameters
+
+                // $sql = 'INSERT INTO product_variations (in_stock, sku, product_id, size) VALUES (?, ?, ?, ?)'; //size
+                // $stmt = $this->conn->prepare($sql);
+                // $success = $stmt->execute([
+                //     $productVariation->inStock, 
+                //     $productVariation->sku, 
+                //     $productVariation->productId,
+                //     $productVariation->size
+                // ]); //Positional parameters
                 
                 if($success) {
                     $newProductVariationId = $this->conn->lastInsertId(); //Fetch the inserted object to get the object with an id.

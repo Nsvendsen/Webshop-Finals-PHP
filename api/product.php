@@ -70,10 +70,16 @@
         // https://stackoverflow.com/questions/9597052/how-to-retrieve-request-payload
         $request_body = file_get_contents('php://input'); //Get form data.
         $data = json_decode($request_body); //Convert from json to php array.
-        
-        $result = $pService->createProduct($data); //Create product in the database.
-        if($result) {
-            $product = $pService->convertToProductArray($result); //Convert attribute names to camel case.
+        // echo print_r($data);
+        $resultProd = $pService->createProduct($data); //Create product in the database.
+        if($resultProd) {
+            $product = $pService->convertToProductArray($resultProd); //Convert attribute names to camel case.
+            $productVar = $data->productVariations[0];
+            $productVar->productId = $resultProd->id;
+            $resultProdVar = $pvService->createProductVariation($productVar);//Create product variation in the database. Only one element in the array. Alternatively use data->inStock etc.
+            $productVarArray = $pvService->convertToProductVariationArray($resultProdVar);
+            $product['productVariations'] = [];
+            array_push($product['productVariations'], $productVarArray);
             echo json_encode($product); //Remove later?
             return json_encode($product); //Convert from php array to json.
         }

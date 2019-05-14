@@ -101,9 +101,20 @@
         function updateProductById($product) {
             if($this->conn) {
                 // $currentDateTime = date('Y-m-d H:i:s'); // Get current date.
-                $sql = 'UPDATE products SET name = ?, price = ?, description = ?, is_active = ?, category = ? WHERE id = ?';
+                // $sql = 'UPDATE products SET name = ?, price = ?, description = ?, is_active = ?, category = ? WHERE id = ?';
+                // $stmt = $this->conn->prepare($sql);
+                // $success = $stmt->execute([$product->name, $product->price, $product->description, $product->isActive, $product->category, $product->id]);//some things removed.
+
+                $sql = 'UPDATE products SET name = :name, price = :price, description = :description, is_active = :is_active, category = :category WHERE id = :id';
                 $stmt = $this->conn->prepare($sql);
-                $success = $stmt->execute([$product->name, $product->price, $product->description, $product->isActive, $product->category, $product->id]);//some things removed.
+                $success = $stmt->execute([
+                    ':name' => $product->name, 
+                    ':price' => $product->price, 
+                    ':description' => $product->description, 
+                    ':is_active' => $product->isActive, 
+                    ':category' => $product->category, 
+                    ':id' => $product->id
+                ]);//some things removed.
                 if($success) {
                     // $updatedProduct = $stmt->fetch();
                     return $success;

@@ -16,9 +16,9 @@
     // $item->setName("Jakob");
     // echo $item->name;
 
-    $requestMethod = $_SERVER['REQUEST_METHOD'];
-    $requestURI = $_SERVER['REQUEST_URI'];
-    echo $requestURI . $requestMethod;
+    // $requestMethod = $_SERVER['REQUEST_METHOD'];
+    // $requestURI = $_SERVER['REQUEST_URI'];
+    // echo $requestURI . $requestMethod;
     
 
     // $query = parse_url($requestURI, PHP_URL_QUERY);
@@ -40,5 +40,20 @@
     //     3
     // ];
     // echo json_encode($arr2);
+
+
+    //TEST DB
+    require_once 'ProductVariationService.php';
+    $pvService = new ProductVariationService();
+
+    $productVar = [
+        'inStock' => 200,
+        'sku' => "oktest123",
+        'size' => "39",
+        'productId' => 6
+    ];
+    $js = json_encode($productVar);
+    echo $productVar['inStock'];
+    // $resultProdVar = $pvService->createProductVariation($productVar);
 
     
