@@ -31,7 +31,8 @@ class UserService implements iUserService {
             'confirmedEmail' => $user->confirmed_email,
             'password' => $user->password, //Dont send password back?
             'gender' => $user->gender,
-            'dateTimeCreated' => $user->date_time_created
+            'dateTimeCreated' => $user->date_time_created,
+            'role' => $user->role
         ];
         return $userArray;
     }
@@ -116,7 +117,7 @@ class UserService implements iUserService {
                 ':zip_code' => $user->zipCode,
                 ':email'=> $user->email,
                 ':password'=> $user->password,
-                ':gender'=>$user->gender
+                ':gender'=>$user->gender //Role is missing. 
             ]);
             if($success) {
                 $newUserId = $this->conn->lastInsertId();
