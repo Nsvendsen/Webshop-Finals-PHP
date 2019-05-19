@@ -18,6 +18,40 @@ class UserService implements iUserService {
         $db = new Database();//Instead of connection here, simply take conn as constructor parameter?
         $this->conn = $db->connect();
     }
+
+    //Database tables are using the snake case convention. Objects are using the camel case convention. 
+    function convertToUserArray($user) {
+        //Set User properties
+        $userArray = [
+            'id' => $user->id,
+            'firstName' => $user->first_name,
+            'lastName' => $user->last_name,
+            'address' => $user->address,
+            'email' => $user->email,
+            'confirmedEmail' => $user->confirmed_email,
+            'password' => $user->password, //Dont send password back?
+            'gender' => $user->gender,
+            'dateTimeCreated' => $user->date_time_created
+        ];
+        return $userArray;
+    }
+
+    function login($loginInfo){
+        if($this->conn) {
+            //Hash entered password and compare with database string?
+            $sql = 'SELECT * FROM users WHERE email = ? AND password = ? LIMIT 1'; //make sure username or email is unique in the database.
+            $stmt = $this->conn->prepare($sql);
+            $success = $stmt->execute([$loginInfo->email, $loginInfo->password]);
+            if($success){
+                $user = $stmt->fetch();
+                return $user;
+            }
+            else {
+                return false; //$success;
+            }
+        }
+    }
+
     function getAllUsers(){
         if($this->conn) {
             $sql = 'SELECT * FROM '.$this->tableName;
@@ -72,7 +106,7 @@ class UserService implements iUserService {
     }
     function createUser($user){
         if($this->conn) {
-            $sql = 'INSERT INTO users (first_name, last_name, address, zip_code, email, confirmed_email, gender) VALUES (:first_name, :last_name, :address, :zip_code, :email, :confirmed_email, :gender)';
+            $sql = 'INSERT INTO users (first_name, last_name, address, zip_code, email, password, gender) VALUES (:first_name, :last_name, :address, :zip_code, :email, :password, :gender)';
             $stmt = $this->conn->prepare($sql);
 
             $success = $stmt->execute([
@@ -81,7 +115,7 @@ class UserService implements iUserService {
                 ':address' => $user->address,
                 ':zip_code' => $user->zipCode,
                 ':email'=> $user->email,
-                ':confirmed_email' => $user->confirmed_email,
+                ':password'=> $user->password,
                 ':gender'=>$user->gender
             ]);
             if($success) {

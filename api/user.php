@@ -1,6 +1,6 @@
 <?php
 require_once '../services/UserService.php';
-include_once '../models/User.php';
+// include_once '../models/User.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header('Access-Control-Allow-Origin: *');

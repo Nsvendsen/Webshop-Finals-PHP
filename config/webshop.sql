@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 08, 2019 at 08:18 PM
+-- Generation Time: May 19, 2019 at 10:00 AM
 -- Server version: 5.7.24-log
 -- PHP Version: 7.2.10
 
@@ -25,15 +25,26 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `baskets`
+--
+
+CREATE TABLE `baskets` (
+  `id` bigint(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `orders`
 --
 
 CREATE TABLE `orders` (
   `id` bigint(11) NOT NULL,
-  `payment_info_id` bigint(11) NOT NULL,
+  `payment_info_id` bigint(11) DEFAULT NULL,
   `order_state` int(11) NOT NULL DEFAULT '0',
   `date_time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_time_payed` datetime DEFAULT NULL
+  `date_time_payed` datetime DEFAULT NULL,
+  `user_id` bigint(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -46,7 +57,10 @@ CREATE TABLE `order_lines` (
   `id` bigint(11) NOT NULL,
   `product_variation_id` bigint(11) NOT NULL,
   `order_id` bigint(11) NOT NULL,
-  `date_time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `date_time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `price` int(11) NOT NULL,
+  `discount_percent` int(11) DEFAULT NULL,
+  `price_with_discount` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -97,10 +111,41 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`id`, `name`, `is_active`, `date_time_created`, `date_time_updated`, `active_from_date`, `expiration_date`, `description`, `price`, `discount_percent`, `category`) VALUES
 (1, 'Sko 2019 serie', 1, '2019-05-05 10:44:42', NULL, NULL, NULL, 'Flotte Sko', 29995, NULL, 'shoes'),
-(2, 'T-Shirt 2019 serie', 1, '2019-05-05 10:45:35', NULL, NULL, NULL, 'Flot t-shirt', 14995, NULL, 'clothes'),
-(3, 'Sko 2018 serie', 1, '2019-05-05 10:44:42', NULL, NULL, NULL, 'Flotte Sko', 29995, NULL, 'shoes'),
-(4, 'Sko 2017 serie', 1, '2019-05-05 10:44:42', NULL, NULL, NULL, 'Flotte Sko', 39995, NULL, 'shoes'),
-(5, 'Sko 2016 serie', 1, '2019-05-05 10:44:42', NULL, NULL, NULL, 'Flotte Sko', 39995, NULL, 'shoes');
+(2, 'T-Shirt 2019 serie', 1, '2019-05-05 10:45:35', '2019-05-13 10:49:11', NULL, NULL, 'Flot t-shirt', 11995, NULL, 'clothes'),
+(5, 'Sko 2016 serie', 1, '2019-05-05 10:44:42', NULL, NULL, NULL, 'Flotte Sko', 39995, NULL, 'shoes'),
+(6, 'test123', 1, '2019-05-13 11:27:47', '2019-05-13 12:24:42', NULL, NULL, 'hej', 10000, NULL, 'shoes'),
+(8, 'test1234', 1, '2019-05-13 17:53:47', NULL, NULL, NULL, 'hej', 10000, NULL, 'shoes'),
+(9, 'jakob', 1, '2019-05-13 18:10:46', NULL, NULL, NULL, 'hej', 20000, NULL, 'shoes'),
+(10, 'test111', 1, '2019-05-13 19:40:28', NULL, NULL, NULL, 'hej', 20000, NULL, 'shoes'),
+(11, 'test321', 0, '2019-05-13 22:35:50', NULL, NULL, NULL, 'test', 15000, NULL, 'shoes'),
+(12, 'test3215', 0, '2019-05-13 23:01:02', NULL, NULL, NULL, 'test', 15000, NULL, 'shoes'),
+(13, 'test32156', 0, '2019-05-13 23:05:12', NULL, NULL, NULL, 'test', 150000, NULL, 'shoes'),
+(14, 't123', 1, '2019-05-14 06:30:25', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(15, 't1234', 1, '2019-05-14 06:33:22', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(16, 't1234', 1, '2019-05-14 06:34:06', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(17, 't1234', 1, '2019-05-14 06:34:28', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(18, 't1234k', 1, '2019-05-14 06:48:15', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(19, 't1234kk', 1, '2019-05-14 06:48:38', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(20, 't1234kkj', 1, '2019-05-14 06:48:57', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(21, 't1234kkjh', 1, '2019-05-14 06:51:54', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(22, 't1234kkjhp', 1, '2019-05-14 06:55:46', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(23, 't1234kkjhpa', 1, '2019-05-14 06:57:02', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(24, 't1234kkjbq', 1, '2019-05-14 06:57:37', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(25, 't1234kkjbn', 1, '2019-05-14 06:58:25', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(26, 't1234kkjbw', 1, '2019-05-14 07:00:06', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(27, 't1234kkjbwt', 1, '2019-05-14 07:04:03', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(28, 't12okk', 1, '2019-05-14 07:08:24', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(29, 't12okkht', 1, '2019-05-14 07:32:46', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(30, 't12okkht6', 1, '2019-05-14 07:41:20', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(31, 't12okkht63', 1, '2019-05-14 07:41:47', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(32, 't12okkht634', 1, '2019-05-14 07:43:18', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(33, 't12okkht6344', 1, '2019-05-14 07:43:31', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(34, 't12okkh421e', 1, '2019-05-14 07:44:39', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(35, 't12okkh421k', 1, '2019-05-14 07:47:38', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(36, 't12okkh421p', 1, '2019-05-14 07:49:03', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(37, 't12okkh42122', 1, '2019-05-14 07:50:31', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(38, 't12okkh42121', 1, '2019-05-14 07:52:08', NULL, NULL, NULL, 'hej', 2000, NULL, 'shoes'),
+(39, 'test54321', 1, '2019-05-14 09:16:32', NULL, NULL, NULL, 'test', 20000, NULL, 'shoes');
 
 -- --------------------------------------------------------
 
@@ -133,14 +178,14 @@ CREATE TABLE `product_variations` (
 --
 
 INSERT INTO `product_variations` (`id`, `in_stock`, `sku`, `product_id`, `size`) VALUES
-(1, 25, 'SKO2019BLACK43', 1, NULL),
-(2, 20, 'SKO2019BLUE44', 1, NULL),
-(3, 15, 'SKO2018YELLOW43', 3, NULL),
-(4, 12, 'SKO2018RED44', 3, NULL),
-(5, 5, 'SKO2017GREEN43', 4, NULL),
-(6, 4, 'SKO2017PURPLE44', 4, NULL),
+(1, 9, 'SKO2019BLACK43', 1, '43'),
+(2, 10, 'SKO2019BLUE44', 1, '44'),
 (7, 3, 'SKO2016BLACK43', 5, NULL),
-(8, 2, 'SKO2016RED44', 5, NULL);
+(8, 2, 'SKO2016RED44', 5, NULL),
+(9, 5, 'tok', 36, '39'),
+(10, 5, 'tok', 37, '39'),
+(11, 5, 'tok', 38, '39'),
+(12, 15, 'test54321', 39, '45');
 
 -- --------------------------------------------------------
 
@@ -156,20 +201,38 @@ CREATE TABLE `users` (
   `zip_code` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `confirmed_email` tinyint(1) NOT NULL DEFAULT '0',
+  `password` varchar(255) NOT NULL,
   `gender` tinyint(1) DEFAULT NULL,
   `date_time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `address`, `zip_code`, `email`, `confirmed_email`, `password`, `gender`, `date_time_created`) VALUES
+(2, 'jakob', 'blinkilde', 'test', '3400', 'jab@b.dk', 0, '12345', 1, '2019-05-19 10:16:57'),
+(4, 'jakob', 'blinkilde', 'test', '3400', 'jab@bb.dk', 0, '12345', 1, '2019-05-19 10:17:14'),
+(7, 'jakob', 'blinkilde', 'test', '3400', 'jab@bbb.dk', 0, '12345', 1, '2019-05-19 10:17:39'),
+(8, 'jakob', 'blinkilde', 'test', '3400', 'jab@bbbb.dk', 0, '12345', 0, '2019-05-19 10:18:31');
 
 --
 -- Indexes for dumped tables
 --
 
 --
+-- Indexes for table `baskets`
+--
+ALTER TABLE `baskets`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `payment_info_id` (`payment_info_id`);
+  ADD KEY `payment_info_id` (`payment_info_id`),
+  ADD KEY `orders_user_id` (`user_id`);
 
 --
 -- Indexes for table `order_lines`
@@ -218,6 +281,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `baskets`
+--
+ALTER TABLE `baskets`
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
@@ -239,7 +308,7 @@ ALTER TABLE `payment_info`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `product_images`
@@ -251,13 +320,13 @@ ALTER TABLE `product_images`
 -- AUTO_INCREMENT for table `product_variations`
 --
 ALTER TABLE `product_variations`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
@@ -267,6 +336,7 @@ ALTER TABLE `users`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `payment_info_id` FOREIGN KEY (`payment_info_id`) REFERENCES `payment_info` (`id`);
 
 --
@@ -292,7 +362,7 @@ ALTER TABLE `product_images`
 -- Constraints for table `product_variations`
 --
 ALTER TABLE `product_variations`
-  ADD CONSTRAINT `product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+  ADD CONSTRAINT `product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
