@@ -18,6 +18,7 @@
             $this->conn = $db->connect();
         }
 
+        //Fix
         //Database tables are using the snake case convention. Objects are using the camel case convention. 
         function convertToOrderLineArray($orderLine) {
             //Set OrderLine properties
@@ -94,6 +95,7 @@
             if($this->conn) {
                 $sql = 'INSERT INTO order_lines (product_variation_id, order_id, price, discount_percent) 
                         VALUES (:product_variation_id, :order_id, :price, :discount_percent)'; 
+                // $sql = 'INSERT INTO order_lines (product_variation_id, order_id, price, discount_percent) VALUES (?, ?, ?, ?)'; //Positional parameters
                 $stmt = $this->conn->prepare($sql);
                 $success = $stmt->execute([
                     ':product_variation_id' => $orderLine['productVariationId'], 
@@ -102,10 +104,13 @@
                     ':discount_percent' => $orderLine['discountPercent']
                 ]); //Named parameters
 
-                // 'productVariationId' => $product->productVariations[0]->id, 
-                // 'orderId' => $orderResult->orderId,
-                // 'price' => $productFromDB->price, 
-                // 'discountPercent' => $productFromDB->discountPercent
+                // $success = $stmt->execute([
+                //     $orderLine['productVariationId'], 
+                //     $orderLine['orderId'],
+                //     $orderLine['price'],
+                //     $orderLine['discountPercent']
+                // ]); //Positional parameters
+
                 if($success) {
                     $newOrderLineId = $this->conn->lastInsertId(); //Fetch the inserted object to get the object with an id.
                     return $this->getOrderLineById($newOrderLineId);

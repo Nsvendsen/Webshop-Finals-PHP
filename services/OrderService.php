@@ -19,21 +19,11 @@
         }
 
         //Database tables are using the snake case convention. Objects are using the camel case convention.
-        // function convertToOrderArray($order) {
-        //     //Set Order properties
-        //     $orderArray = [
-        //         'id' => $order->id,
-        //         'orderState' => $order->orderState
-        //     ];
-        //     return $orderArray;
-        // }
-
-        // Get order ready to be sent to user.
         function convertToOrderArray($order) {
             //Set Order properties
             $orderArray = [
                 'id' => $order->id,
-                'orderState' => $order->orderState
+                'orderState' => $order->order_state
             ];
             return $orderArray;
         }
@@ -80,8 +70,10 @@
                     $newOrderId = $this->conn->lastInsertId(); //Fetch the inserted object to get the object with an id.
                     return $this->getOrderById($newOrderId);
                 }
+                else {
+                    return $success; //Returns false
+                }
             }
-            // return $newOrder;
         }
 
         function changeOrderState($orderState, $orderId) {

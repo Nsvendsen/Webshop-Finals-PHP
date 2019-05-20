@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 19, 2019 at 10:00 AM
+-- Generation Time: May 20, 2019 at 09:25 PM
 -- Server version: 5.7.24-log
 -- PHP Version: 7.2.10
 
@@ -25,27 +25,56 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `baskets`
---
-
-CREATE TABLE `baskets` (
-  `id` bigint(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `orders`
 --
 
 CREATE TABLE `orders` (
   `id` bigint(11) NOT NULL,
   `payment_info_id` bigint(11) DEFAULT NULL,
-  `order_state` int(11) NOT NULL DEFAULT '0',
+  `order_state` varchar(255) NOT NULL DEFAULT 'not_completed',
   `date_time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_time_payed` datetime DEFAULT NULL,
   `user_id` bigint(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `payment_info_id`, `order_state`, `date_time_created`, `date_time_payed`, `user_id`) VALUES
+(1, NULL, 'not_completed', '2019-05-20 15:03:29', NULL, 4),
+(2, NULL, 'not_completed', '2019-05-20 22:06:31', NULL, NULL),
+(3, NULL, 'not_completed', '2019-05-20 22:09:20', NULL, NULL),
+(4, NULL, 'not_completed', '2019-05-20 22:16:29', NULL, NULL),
+(5, NULL, 'not_completed', '2019-05-20 22:17:11', NULL, NULL),
+(6, NULL, 'not_completed', '2019-05-20 22:18:05', NULL, NULL),
+(7, 8, 'not_completed', '2019-05-20 22:20:14', NULL, 4),
+(8, 9, 'not_completed', '2019-05-20 22:23:28', NULL, 4),
+(9, 10, 'not_completed', '2019-05-20 22:24:06', NULL, 4),
+(10, 11, 'not_completed', '2019-05-20 22:24:15', NULL, 4),
+(11, 12, 'not_completed', '2019-05-20 22:24:21', NULL, 4),
+(12, 13, 'not_completed', '2019-05-20 22:26:06', NULL, 4),
+(13, 14, 'not_completed', '2019-05-20 22:26:09', NULL, 4),
+(14, 15, 'not_completed', '2019-05-20 22:27:02', NULL, 4),
+(15, 16, 'not_completed', '2019-05-20 22:27:10', NULL, 4),
+(16, 17, 'not_completed', '2019-05-20 22:31:01', NULL, 4),
+(17, 18, 'not_completed', '2019-05-20 22:35:51', NULL, 4),
+(18, 19, 'not_completed', '2019-05-20 22:36:14', NULL, 4),
+(19, 20, 'not_completed', '2019-05-20 22:44:24', NULL, 4),
+(20, 21, 'not_completed', '2019-05-20 22:44:57', NULL, 4),
+(21, 22, 'not_completed', '2019-05-20 22:48:47', NULL, 4),
+(22, 23, 'not_completed', '2019-05-20 22:49:47', NULL, 4),
+(23, 24, 'not_completed', '2019-05-20 22:51:14', NULL, 4),
+(24, 25, 'not_completed', '2019-05-20 22:54:26', NULL, 4),
+(25, 26, 'not_completed', '2019-05-20 22:54:54', NULL, 4),
+(26, 27, 'not_completed', '2019-05-20 22:56:48', NULL, 4),
+(27, 28, 'not_completed', '2019-05-20 22:57:45', NULL, 4),
+(28, 29, 'not_completed', '2019-05-20 23:01:23', NULL, 4),
+(29, 30, 'not_completed', '2019-05-20 23:01:48', NULL, 4),
+(30, 31, 'not_completed', '2019-05-20 23:07:15', NULL, 4),
+(31, 32, 'not_completed', '2019-05-20 23:16:25', NULL, 4),
+(32, 1, 'not_completed', '2019-05-20 23:23:45', NULL, 4),
+(33, 33, 'not_completed', '2019-05-20 23:24:25', NULL, 4);
 
 -- --------------------------------------------------------
 
@@ -63,6 +92,24 @@ CREATE TABLE `order_lines` (
   `price_with_discount` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `order_lines`
+--
+
+INSERT INTO `order_lines` (`id`, `product_variation_id`, `order_id`, `date_time_created`, `price`, `discount_percent`, `price_with_discount`) VALUES
+(1, 1, 1, '2019-05-20 15:04:36', 29995, NULL, NULL),
+(2, 2, 1, '2019-05-20 15:17:40', 29995, NULL, NULL),
+(3, 1, 1, '2019-05-20 22:49:47', 29995, NULL, NULL),
+(4, 1, 25, '2019-05-20 22:54:54', 29995, NULL, NULL),
+(5, 1, 26, '2019-05-20 22:56:48', 29995, NULL, NULL),
+(6, 1, 27, '2019-05-20 22:57:45', 29995, NULL, NULL),
+(7, 1, 28, '2019-05-20 23:01:23', 29995, NULL, NULL),
+(8, 1, 29, '2019-05-20 23:01:48', 29995, NULL, NULL),
+(9, 1, 30, '2019-05-20 23:07:15', 29995, NULL, NULL),
+(10, 1, 31, '2019-05-20 23:16:25', 29995, NULL, NULL),
+(11, 1, 32, '2019-05-20 23:23:45', 29995, NULL, NULL),
+(12, 1, 33, '2019-05-20 23:24:25', 29995, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -79,11 +126,49 @@ CREATE TABLE `payment_info` (
   `country` varchar(255) NOT NULL,
   `zip_code` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `card_type` varchar(255) NOT NULL,
   `card_number` int(11) NOT NULL,
   `card_expiration_date` varchar(255) NOT NULL,
   `cvc_number` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `payment_info`
+--
+
+INSERT INTO `payment_info` (`id`, `user_id`, `first_name`, `last_name`, `address`, `phone_number`, `country`, `zip_code`, `email`, `card_number`, `card_expiration_date`, `cvc_number`) VALUES
+(1, NULL, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(2, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(3, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(4, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(5, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(6, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(7, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(8, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(9, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(10, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(11, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(12, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(13, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(14, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(15, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(16, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(17, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(18, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(19, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(20, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(21, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(22, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(23, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(24, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(25, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(26, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(27, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(28, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(29, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(30, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(31, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(32, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(33, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111);
 
 -- --------------------------------------------------------
 
@@ -203,28 +288,25 @@ CREATE TABLE `users` (
   `confirmed_email` tinyint(1) NOT NULL DEFAULT '0',
   `password` varchar(255) NOT NULL,
   `gender` tinyint(1) DEFAULT NULL,
-  `date_time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `date_time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `role` varchar(255) NOT NULL DEFAULT 'costumer'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`, `address`, `zip_code`, `email`, `confirmed_email`, `password`, `gender`, `date_time_created`) VALUES
-(2, 'jakob', 'blinkilde', 'test', '3400', 'jab@b.dk', 0, '12345', 1, '2019-05-19 10:16:57'),
-(4, 'jakob', 'blinkilde', 'test', '3400', 'jab@bb.dk', 0, '12345', 1, '2019-05-19 10:17:14'),
-(7, 'jakob', 'blinkilde', 'test', '3400', 'jab@bbb.dk', 0, '12345', 1, '2019-05-19 10:17:39'),
-(8, 'jakob', 'blinkilde', 'test', '3400', 'jab@bbbb.dk', 0, '12345', 0, '2019-05-19 10:18:31');
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `address`, `zip_code`, `email`, `confirmed_email`, `password`, `gender`, `date_time_created`, `role`) VALUES
+(2, 'jakob', 'blinkilde', 'test', '3400', 'jab@b.dk', 0, '12345', 1, '2019-05-19 10:16:57', 'admin'),
+(4, 'jakob', 'blinkilde', 'test', '3400', 'jab@bb.dk', 0, '12345', 1, '2019-05-19 10:17:14', 'admin'),
+(7, 'jakob', 'blinkilde', 'test', '3400', 'jab@bbb.dk', 0, '12345', 1, '2019-05-19 10:17:39', 'costumer'),
+(8, 'jakob', 'blinkilde', 'test', '3400', 'jab@bbbb.dk', 0, '12345', 0, '2019-05-19 10:18:31', 'costumer'),
+(9, 'jakob', 'blinkilde', 'test', '3400', 'jab@bl.dk', 0, '12345', 1, '2019-05-20 01:24:44', 'costumer'),
+(10, 'test', 'test', 'test', '3400', 'test@t.dk', 0, '12345', 1, '2019-05-20 01:28:58', 'costumer');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `baskets`
---
-ALTER TABLE `baskets`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `orders`
@@ -281,28 +363,22 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `baskets`
---
-ALTER TABLE `baskets`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `order_lines`
 --
 ALTER TABLE `order_lines`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `payment_info`
 --
 ALTER TABLE `payment_info`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -326,7 +402,7 @@ ALTER TABLE `product_variations`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables

@@ -41,26 +41,27 @@
 
         // Perhaps make if statement to ensure order is created, make this a transaction.
         // Get products from database and use them instead of using the posted data.
-        foreach($order->productsInBasket as $product) { //Loop through the products.
-            $productFromDB = $productService->getProductById($product->id); //Get product from database to ensure the price is correct.
-            $orderLineToSave = [
-                'productVariationId' => $product->productVariations[0]->id, 
-                'orderId' => $orderResult->orderId,
-                'price' => $productFromDB->price, 
-                'discountPercent' => $productFromDB->discountPercent
-                // 'priceWithDiscount' =>
-            ];
-            
-            $orderLineResult = $orderLineService->createOrderLine($orderLineToSave); // Save orderline in the database.
+        if($orderResult) {
+            foreach($order->productsInBasket as $product) { //Loop through the products.
+                $productFromDB = $productService->getProductById($product->id); //Get product from database to ensure the price is correct.
+                $orderLineToSave = [
+                    'productVariationId' => $product->productVariations[0]->id, 
+                    'orderId' => $orderResult->id,
+                    'price' => $productFromDB->price, 
+                    'discountPercent' => $productFromDB->discountPercent
+                    // 'priceWithDiscount' =>
+                ];
+                
+                $orderLineResult = $orderLineService->createOrderLine($orderLineToSave); // Save orderline in the database.
+            }
+
+            $joinedOrderLines = $orderLineService->getOrderLinesForOrder($orderResult->id); //Get orderlines joined with product_variation and products from the database.
+            // $joinedOrderLinesConverted = $orderLineService->convertJoinedToCamelCase($joinedOrderLines); //Use this if values are added using snake case. Convert joinedOrderLines to camel case.
+            $orderConverted = $orderService->convertToOrderArray($orderResult); //Convert attribute names to camel case
+            $orderConverted['orderLines'] = $joinedOrderLines; //Use joinedOrderLinesConverted if values are added using snake case. Set orderLine so they will be sent to the user along with the order.
+            // $orderConverted['paymentInfo'] = $paymentInfoResult;
+
+            echo json_encode($orderConverted);
+            return json_encode($orderConverted);
         }
-
-    //     $joinedOrderLines = $orderLineService->getOrderLinesForOrder($orderResult->id); //Get orderlines joined with product_variation and products from the database.
-    //     // $joinedOrderLinesConverted = $orderLineService->convertJoinedToCamelCase($joinedOrderLines); //Use this if values are added using snake case. Convert joinedOrderLines to camel case.
-    //     $orderConverted = $orderService->convertToOrderArray($orderResult); //Convert attribute names to camel case
-    //     // $orderConverted->orderLines = $orderLineArray; //orderConverted is an array, not an object. dont use this.
-    //     $orderConverted['orderLines'] = $joinedOrderLines; //Use joinedOrderLinesConverted if values are added using snake case. Set orderLine so they will be sent to the user along with the order.
-    //     // $orderConverted['paymentInfo'] = $paymentInfoResult;
-
-    //     echo $orderConverted;
-    //     return json_encode($orderConverted);
     }
