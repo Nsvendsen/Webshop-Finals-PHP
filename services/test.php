@@ -43,17 +43,23 @@
 
 
     //TEST DB
-    require_once 'ProductVariationService.php';
-    $pvService = new ProductVariationService();
+    // require_once 'ProductVariationService.php';
+    // $pvService = new ProductVariationService();
 
-    $productVar = [
-        'inStock' => 200,
-        'sku' => "oktest123",
-        'size' => "39",
-        'productId' => 6
-    ];
-    $js = json_encode($productVar);
-    echo $productVar['inStock'];
-    // $resultProdVar = $pvService->createProductVariation($productVar);
+    // $productVar = [
+    //     'inStock' => 200,
+    //     'sku' => "oktest123",
+    //     'size' => "39",
+    //     'productId' => 6
+    // ];
+    // $js = json_encode($productVar);
+    // echo $productVar['inStock'];
+    // // $resultProdVar = $pvService->createProductVariation($productVar);
 
+
+
+    require_once 'OrderLineService.php';
+    $olService = new OrderLineService();
+    $result = $olService->getOrderLinesForOrder(1);
+    echo json_encode($result);
     

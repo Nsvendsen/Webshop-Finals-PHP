@@ -3,6 +3,8 @@
 require_once '../config/Database.php';
 
 interface iUserService {
+    public function convertToUserArray($user);
+    public function login($loginInfo);
     public function getAllUsers();
     public function getUserById($profileId);
     public function deleteUserById($profileId);
