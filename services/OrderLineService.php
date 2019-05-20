@@ -31,6 +31,19 @@
             return $orderLineArray;
         }
 
+        //Database tables are using the snake case convention. Objects are using the camel case convention. 
+        function convertJoinedToCamelCase($joinedOrderLines) { //Joined orderlines consists of data from 3 tables: order_lines, product_variations and products.
+            //Set joined OrderLine properties
+            $orderLineArray = [ //No difference between camel case and snake case here!
+                'id' => $orderLine->id,
+                'price' => $orderLine->price,
+                'sku' => $orderLine->sku,
+                'size' => $orderLine->size,
+                'name' => $orderLine->name,
+            ];
+            return $orderLineArray;
+        }
+
         // // OrderLine database functions
         // function getAllOrderLines() { 
         //     if($this->conn) {
@@ -56,7 +69,6 @@
                         INNER JOIN product_variations ON order_lines.product_variation_id = product_variations.id) 
                         INNER JOIN products ON product_variations.product_id = products.id) 
                         WHERE order_lines.order_id = ?';
-                        // HAVING?
                 $stmt = $this->conn->prepare($sql);
                 $success = $stmt->execute([$orderId]); 
                 if($success) {
@@ -65,11 +77,6 @@
             }
             return $orderLines;
         }
-
-        // SELECT Orders.OrderID, Customers.CustomerName, Shippers.ShipperName
-        // FROM ((Orders
-        // INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID)
-        // INNER JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID);
 
         function getOrderLineById($orderLineId) {
             if($this->conn) {
@@ -85,14 +92,20 @@
 
         function createOrderLine($orderLine) {
             if($this->conn) {
-                $sql = 'INSERT INTO order_lines (payment_info_id, user_id) VALUES (:payment_info_id, :user_id)'; 
+                $sql = 'INSERT INTO order_lines (product_variation_id, order_id, price, discount_percent) 
+                        VALUES (:product_variation_id, :order_id, :price, :discount_percent)'; 
                 $stmt = $this->conn->prepare($sql);
                 $success = $stmt->execute([
-                    ':payment_info_id' => $orderLine->paymentInfoId, 
-                    // ':orderLine_state' => $orderLine->orderLineState, 
-                    ':user_id' => $orderLine->userId
+                    ':product_variation_id' => $orderLine['productVariationId'], 
+                    ':order_id' => $orderLine['orderId'],
+                    ':price' => $orderLine['price'],
+                    ':discount_percent' => $orderLine['discountPercent']
                 ]); //Named parameters
 
+                // 'productVariationId' => $product->productVariations[0]->id, 
+                // 'orderId' => $orderResult->orderId,
+                // 'price' => $productFromDB->price, 
+                // 'discountPercent' => $productFromDB->discountPercent
                 if($success) {
                     $newOrderLineId = $this->conn->lastInsertId(); //Fetch the inserted object to get the object with an id.
                     return $this->getOrderLineById($newOrderLineId);

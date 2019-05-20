@@ -27,21 +27,24 @@
         $request_body = file_get_contents('php://input'); //Get form data.
         $order = json_decode($request_body); //Convert from json to php array. array or object?
         
+    //     //Replace last 4 digits of cardnumber with XXXX for security purposes?
+    //     // $paymentInfoToSave = [
+    //     //     
+    //     // ]; 
         $paymentInfoResult = $paymentInfoService->createPaymentInfo($order->paymentInfo); //Save paymentinfo in the database.
 
         $orderToSave = [
             'paymentInfoId' => $paymentInfoResult->id, 
-            'userId' => $paymentInfoResult->userId
+            'userId' => $order->userId
         ]; 
         $orderResult = $orderService->createOrder($orderToSave); // Create new order in the database.
-        // $orderConverted =  $orderService->convertToOrderArray($orderResult); //Convert attribute names to camel case
 
-        $orderLineArray = []; //Is going to be added to the order.
+        // Perhaps make if statement to ensure order is created, make this a transaction.
         // Get products from database and use them instead of using the posted data.
         foreach($order->productsInBasket as $product) { //Loop through the products.
             $productFromDB = $productService->getProductById($product->id); //Get product from database to ensure the price is correct.
             $orderLineToSave = [
-                'productVariationId' => $product->productVariations[0].id,
+                'productVariationId' => $product->productVariations[0]->id, 
                 'orderId' => $orderResult->orderId,
                 'price' => $productFromDB->price, 
                 'discountPercent' => $productFromDB->discountPercent
@@ -49,15 +52,15 @@
             ];
             
             $orderLineResult = $orderLineService->createOrderLine($orderLineToSave); // Save orderline in the database.
-            $orderLineConverted = $orderLineService->convertToOrderLineArray($orderLineResult); //Convert attribute names to camel case
-            array_push($orderLineArray, $orderLineConverted);
         }
 
-        //Join orderline with productvariation and join productvariation with product.
-        //What should orderline contain: id, price, discountPercent, name, description?, sku, inStock?, size
-        $orderConverted = $orderService->convertToOrderArray($orderResult, $orderLineArray, $joinedProduct); //Convert attribute names to camel case
-        // $orderConverted->orderLines = $orderLineArray;
-        // $orderConverted['orderLines'] = $orderLineArray; //Use this
-        echo $orderConverted;
-        return json_encode($orderConverted);
+    //     $joinedOrderLines = $orderLineService->getOrderLinesForOrder($orderResult->id); //Get orderlines joined with product_variation and products from the database.
+    //     // $joinedOrderLinesConverted = $orderLineService->convertJoinedToCamelCase($joinedOrderLines); //Use this if values are added using snake case. Convert joinedOrderLines to camel case.
+    //     $orderConverted = $orderService->convertToOrderArray($orderResult); //Convert attribute names to camel case
+    //     // $orderConverted->orderLines = $orderLineArray; //orderConverted is an array, not an object. dont use this.
+    //     $orderConverted['orderLines'] = $joinedOrderLines; //Use joinedOrderLinesConverted if values are added using snake case. Set orderLine so they will be sent to the user along with the order.
+    //     // $orderConverted['paymentInfo'] = $paymentInfoResult;
+
+    //     echo $orderConverted;
+    //     return json_encode($orderConverted);
     }

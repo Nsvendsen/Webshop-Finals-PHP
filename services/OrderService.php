@@ -29,12 +29,11 @@
         // }
 
         // Get order ready to be sent to user.
-        function convertToOrderArray($order, $orderLines) {
+        function convertToOrderArray($order) {
             //Set Order properties
             $orderArray = [
                 'id' => $order->id,
-                'orderState' => $order->orderState,
-                'orderLines' => $orderLines
+                'orderState' => $order->orderState
             ];
             return $orderArray;
         }
@@ -72,9 +71,9 @@
                 $sql = 'INSERT INTO orders (payment_info_id, user_id) VALUES (:payment_info_id, :user_id)'; 
                 $stmt = $this->conn->prepare($sql);
                 $success = $stmt->execute([
-                    ':payment_info_id' => $order->paymentInfoId, 
+                    ':payment_info_id' => $order['paymentInfoId'], 
                     // ':order_state' => $order->orderState, 
-                    ':user_id' => $order->userId
+                    ':user_id' => $order['userId']
                 ]); //Named parameters
 
                 if($success) {
