@@ -62,9 +62,9 @@
         // }
 
         // OrderLine database functions
+        //This returns a list of orderlines which consists of data from 3 tables.
         function getOrderLinesForOrder($orderId) { 
             if($this->conn) {
-                //What should orderline contain? This returns a list of orderlines which consists of data from 3 tables.
                 $sql = 'SELECT order_lines.id, order_lines.price, product_variations.sku, product_variations.size, products.name
                         FROM ((order_lines 
                         INNER JOIN product_variations ON order_lines.product_variation_id = product_variations.id) 

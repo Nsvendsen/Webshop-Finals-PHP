@@ -23,24 +23,20 @@
     $productService = new ProductService();
     $paymentInfoService = new PaymentInfoService();
 
-    if($requestMethod == 'POST') { //arr: Order: {PaymentInfo(with userid), productsInBasket: [Product{ProductVariation}, Product{ProductVariation}]}
+    if($requestMethod == 'POST') {
         $request_body = file_get_contents('php://input'); //Get form data.
         $order = json_decode($request_body); //Convert from json to php array. array or object?
         
-    //     //Replace last 4 digits of cardnumber with XXXX for security purposes?
-    //     // $paymentInfoToSave = [
-    //     //     
-    //     // ]; 
+        // Replace last 4 digits of cardnumber with XXXX for security purposes?
+        // Perhaps make this process a transaction to ensure all elements of the order are created.
         $paymentInfoResult = $paymentInfoService->createPaymentInfo($order->paymentInfo); //Save paymentinfo in the database.
-
+        
         $orderToSave = [
             'paymentInfoId' => $paymentInfoResult->id, 
             'userId' => $order->userId
         ]; 
         $orderResult = $orderService->createOrder($orderToSave); // Create new order in the database.
 
-        // Perhaps make if statement to ensure order is created, make this a transaction.
-        // Get products from database and use them instead of using the posted data.
         if($orderResult) {
             foreach($order->productsInBasket as $product) { //Loop through the products.
                 $productFromDB = $productService->getProductById($product->id); //Get product from database to ensure the price is correct.
@@ -55,9 +51,11 @@
                 $orderLineResult = $orderLineService->createOrderLine($orderLineToSave); // Save orderline in the database.
             }
 
-            $joinedOrderLines = $orderLineService->getOrderLinesForOrder($orderResult->id); //Get orderlines joined with product_variation and products from the database.
+            //Get orderlines joined with product_variation and products from the database.
+            $joinedOrderLines = $orderLineService->getOrderLinesForOrder($orderResult->id); 
+
             // $joinedOrderLinesConverted = $orderLineService->convertJoinedToCamelCase($joinedOrderLines); //Use this if values are added using snake case. Convert joinedOrderLines to camel case.
-            $orderConverted = $orderService->convertToOrderArray($orderResult); //Convert attribute names to camel case
+            $orderConverted = $orderService->convertToOrderArray($orderResult); //Convert attribute names to camel case.
             $orderConverted['orderLines'] = $joinedOrderLines; //Use joinedOrderLinesConverted if values are added using snake case. Set orderLine so they will be sent to the user along with the order.
             // $orderConverted['paymentInfo'] = $paymentInfoResult;
 
@@ -65,3 +63,16 @@
             return json_encode($orderConverted);
         }
     }
+    // if($requestMethod == 'GET') { //Gets all products. If queryparameter ?user=someUserId is present, all orders for that user will be returned.
+    //     $userId = $_GET['user'];//Try to get user query parameter.
+    //     $ordersToReturn = $orderService->getAllOrders($userId);
+
+        // $ordersToReturn = [];
+        // foreach($orders as $o) { //Loop through the products.
+        //     $orderConverted = $orderService->convertToOrderArray($o); //Convert attribute names to camel case.
+        //     array_push($ordersToReturn, $orderConverted);
+        // }
+
+        // echo json_encode($ordersToReturn);
+        // return json_encode($ordersToReturn);
+    // }
