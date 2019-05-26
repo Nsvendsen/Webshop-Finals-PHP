@@ -18,11 +18,10 @@
     $userService = new UserService();
 
     // https://security.stackexchange.com/questions/147188/is-it-bad-practice-to-use-get-method-as-login-username-password-for-administrato use post for login attempt
-    if($requestMethod == 'POST') { //Make username or email unique and use that in combination with password.
+    if($requestMethod == 'POST') { 
         $request_body = file_get_contents('php://input'); //Get form data.
         $loginInfo = json_decode($request_body); //Convert from json to php array.
 
-        // echo $loginInfo->email;
         $resultUser = $userService->login($loginInfo); //Try to find user with the entered username and password.
         if($resultUser) {
             $user = $userService->convertToUserArray($resultUser); //Convert attribute names to camel case.
@@ -31,7 +30,7 @@
                 http_response_code(401); //Error code 401 Unauthorized if login failed.
             }
             else {
-                echo json_encode($user); //Remove later?
+                echo json_encode($user); 
                 return json_encode($user); //Convert from php array to json.
             }
         }

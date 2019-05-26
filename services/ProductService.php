@@ -15,7 +15,7 @@
         private $conn; // Contains database connection
 
         function __construct() {
-            $db = new Database();//Instead of connection here, simply take conn as constructor parameter?
+            $db = new Database();
             $this->conn = $db->connect();
         }
 

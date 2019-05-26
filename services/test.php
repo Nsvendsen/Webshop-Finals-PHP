@@ -64,11 +64,11 @@
     // echo json_encode($result);
 
 
-    // require_once 'OrderService.php';
-    // $orderService = new OrderService();
-    // // $orderTest = $orderService->getOrderById(25);
-    // // echo json_encode($orderTest);
+    require_once 'OrderService.php';
+    $orderService = new OrderService();
+    // $orderTest = $orderService->getOrderById(25);
+    // echo json_encode($orderTest);
     
-    // $userId = $_GET['user'];//Try to get query parameter.
-    // $orders = $orderService->getAllOrders($userId);
-    // echo json_encode($orders);
+    $userId = $_GET['user'];//Try to get query parameter.
+    $orders = $orderService->getAllOrdersForUser($userId);
+    echo json_encode($orders);

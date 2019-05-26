@@ -25,7 +25,7 @@
 
     if($requestMethod == 'POST') {
         $request_body = file_get_contents('php://input'); //Get form data.
-        $order = json_decode($request_body); //Convert from json to php array. array or object?
+        $order = json_decode($request_body); //Convert from json to php array.
         
         // Replace last 4 digits of cardnumber with XXXX for security purposes?
         // Perhaps make this process a transaction to ensure all elements of the order are created.
@@ -63,16 +63,21 @@
             return json_encode($orderConverted);
         }
     }
-    // if($requestMethod == 'GET') { //Gets all products. If queryparameter ?user=someUserId is present, all orders for that user will be returned.
-    //     $userId = $_GET['user'];//Try to get user query parameter.
-    //     $ordersToReturn = $orderService->getAllOrders($userId);
+    if($requestMethod == 'GET') { //Gets all products. If queryparameter ?user=someUserId is present, all orders for that user will be returned.
+        if(isset($_GET['user'])) {    
+            $userId = $_GET['user'];//Try to get user query parameter.
+            $orders = $orderService->getAllOrdersForUser($userId); //Get all orders for a user
+        }
+        else {
+            $orders = $orderService->getAllOrders(); //Get all orders
+        }
+        
+        $ordersToReturn = [];
+        foreach($orders as $o) { //Loop through the orders.
+            $orderConverted = $orderService->convertToOrderArray($o); //Convert attribute names to camel case.
+            array_push($ordersToReturn, $orderConverted);
+        }
 
-        // $ordersToReturn = [];
-        // foreach($orders as $o) { //Loop through the products.
-        //     $orderConverted = $orderService->convertToOrderArray($o); //Convert attribute names to camel case.
-        //     array_push($ordersToReturn, $orderConverted);
-        // }
-
-        // echo json_encode($ordersToReturn);
-        // return json_encode($ordersToReturn);
-    // }
+        echo json_encode($ordersToReturn);
+        return json_encode($ordersToReturn);
+    }

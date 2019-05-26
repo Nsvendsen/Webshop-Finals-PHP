@@ -1,6 +1,5 @@
 <?php
 require_once '../services/UserService.php';
-// include_once '../models/User.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header('Access-Control-Allow-Origin: *');
@@ -24,11 +23,13 @@ $userService = new UserService();
 if($requestMethod == 'GET') {
     if(is_numeric($userId)){
         $result = $userService->getUserById($userId);
-        //echo json_encode($result);
+        //Convert values to camel case before returning?
+        echo json_encode($result);
         return json_encode($result);
     }else{
         $result = $userService->getAllUsers();
-        //echo json_encode($result);
+        //Convert values to camel case before returning?
+        echo json_encode($result);
         return json_encode($result);
     }
 }
@@ -37,6 +38,7 @@ if($requestMethod == 'POST') {
     $request_body = file_get_contents('php://input');
     $data = json_decode($request_body);
     $result = $userService->createUser($data);
+    //Convert values to camel case before returning?
     if($result) {
         echo json_encode($result);
         return json_encode($result);
@@ -52,7 +54,7 @@ if($requestMethod == 'PUT') {
 }
 if($requestMethod == 'DELETE') {
     if (is_numeric($userId)) {
-        $result = $userService->updateUserById($data);
+        $result = $userService->deleteUserById($data);
         return json_encode($result);
     }
 }

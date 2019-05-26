@@ -26,9 +26,9 @@
                 'id' => $order->id,
                 'orderState' => $order->order_state,
                 //Changed
-                // 'dateTimeCreated' => $order->date_time_created,
-                // 'userId' => $order->user_id,
-                // 'priceTotal' => $order->price_total
+                'dateTimeCreated' => $order->date_time_created,
+                'userId' => $order->user_id,
+                'priceTotal' => $order->price_total
             ];
             return $orderArray;
         }
@@ -62,6 +62,23 @@
             return $orders;
         }
 
+        //Get all orders for a user.
+        function getAllOrdersForUser($userId) { 
+            if($this->conn) {
+                $sql = 'SELECT orders.id, orders.payment_info_id, orders.order_state, orders.date_time_created, orders.user_id, SUM(order_lines.price) as price_total 
+                        FROM orders INNER JOIN order_lines ON order_lines.order_id = orders.id 
+                        WHERE orders.user_id = ? 
+                        GROUP BY orders.id 
+                        ORDER BY orders.date_time_created DESC';
+                $stmt = $this->conn->prepare($sql);
+                $success = $stmt->execute([$userId]); 
+                if($success) {
+                    $orders = $stmt->fetchAll();
+                }
+            }
+            return $orders;
+        }
+
         function getOrderById($orderId) {
             if($this->conn) {
                 //Use price_after_discount instead of price when discount is implemented.
@@ -70,7 +87,7 @@
                 // INNER JOIN order_lines ON orders.id = order_lines.order_id) 
                 // WHERE orders.id = ?'; //Need to join to get total_price
                 $sql = 'SELECT * FROM orders WHERE id = ? LIMIT 1';
-                
+
                 $stmt = $this->conn->prepare($sql);
                 $success = $stmt->execute([$orderId]);
                 if($success) { // true or false

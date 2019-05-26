@@ -9,7 +9,7 @@ interface iUserService {
     public function getUserById($profileId);
     public function deleteUserById($profileId);
     public function updateUserById($profileId);
-    public function getUserByEmail($email); //giver denne mening?
+    public function getUserByEmail($email); //Does this make sense?
 }
 
 class UserService implements iUserService {

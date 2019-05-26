@@ -1,8 +1,6 @@
 <?php
     // require_once '../services/ProductService.php';
     require_once '../services/ProductVariationService.php';
-    // require_once '../models/Product.php'; 
-    require_once '../models/ProductVariation.php'; 
 
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         header('Access-Control-Allow-Origin: *');
@@ -28,30 +26,10 @@
         if(is_numeric($productVariationId)) { // Get one product variation.
             $productVariationResult = $productVariationService->getProductVariationById($productVariationId); //Get product variation from the database.
             $productVariation = $productVariationService->convertToProductVariationArray($productVariationResult); //Convert attribute names to camel case.
-            
-            //Change to load variationattributes & save them in the variation array. CODE NOT FINISHED
-            // $productVariationResult = $productVariationService->getProductVariationsByProductId($productVariationId); //Get all variations for the product.
-            // $variationArray = []; //Empty array to contain the product variations.
-            // foreach($productVariationResult as $variation) { //Loop through the variations.
-            //     $productVariation = $productVariationService->convertToProductVariationArray($variation); //Convert attribute names to camel case.
-            //     array_push($variationArray, $productVariation); //Add to array.
-            // }
-            // $product['productVariations'] = $variationArray; //Add the variation array to the product.
 
             echo json_encode($productVariation);
             return json_encode($productVariation); //Convert from php array to json
         }
-        // else { // Get all products variations. No scenario where we want to get all product variations. CODE NOT FINISHED
-        //     $result = $productVariationService->getAllProductVariations(); //Get all product variations.
-
-        //     $productVariationArray = []; //Empty array to contain the product variations.
-        //     foreach($result as $prod) { //Loop through the products.
-        //         $product = $productService->convertToProductArray($prod); //Convert attribute names to camel case.
-        //         array_push($productArray, $product); //Add to array.
-        //     }
-        //     echo json_encode($productArray);
-        //     return json_encode($productArray); //Convert from php array to json
-        // }
     }
 
     if($requestMethod == 'POST') {
