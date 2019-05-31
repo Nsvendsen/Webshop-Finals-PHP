@@ -103,7 +103,6 @@
                 $stmt = $this->conn->prepare($sql);
                 $success = $stmt->execute([
                     ':payment_info_id' => $order['paymentInfoId'], 
-                    // ':order_state' => $order->orderState, 
                     ':user_id' => $order['userId']
                 ]); //Named parameters
 
