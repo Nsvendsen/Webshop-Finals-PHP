@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 20, 2019 at 09:25 PM
+-- Generation Time: Jun 02, 2019 at 07:55 AM
 -- Server version: 5.7.24-log
 -- PHP Version: 7.2.10
 
@@ -74,7 +74,10 @@ INSERT INTO `orders` (`id`, `payment_info_id`, `order_state`, `date_time_created
 (30, 31, 'not_completed', '2019-05-20 23:07:15', NULL, 4),
 (31, 32, 'not_completed', '2019-05-20 23:16:25', NULL, 4),
 (32, 1, 'not_completed', '2019-05-20 23:23:45', NULL, 4),
-(33, 33, 'not_completed', '2019-05-20 23:24:25', NULL, 4);
+(33, 33, 'not_completed', '2019-05-20 23:24:25', NULL, 4),
+(34, 34, 'not_completed', '2019-05-20 23:28:46', NULL, 4),
+(35, 35, 'not_completed', '2019-05-23 10:00:07', NULL, 4),
+(36, 36, 'not_completed', '2019-05-23 23:37:34', NULL, 4);
 
 -- --------------------------------------------------------
 
@@ -108,7 +111,11 @@ INSERT INTO `order_lines` (`id`, `product_variation_id`, `order_id`, `date_time_
 (9, 1, 30, '2019-05-20 23:07:15', 29995, NULL, NULL),
 (10, 1, 31, '2019-05-20 23:16:25', 29995, NULL, NULL),
 (11, 1, 32, '2019-05-20 23:23:45', 29995, NULL, NULL),
-(12, 1, 33, '2019-05-20 23:24:25', 29995, NULL, NULL);
+(12, 1, 33, '2019-05-20 23:24:25', 29995, NULL, NULL),
+(13, 1, 34, '2019-05-20 23:28:46', 29995, NULL, NULL),
+(14, 1, 35, '2019-05-23 10:00:07', 29995, NULL, NULL),
+(15, 1, 36, '2019-05-23 23:37:34', 29995, NULL, NULL),
+(16, 7, 36, '2019-05-23 23:37:34', 39995, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -168,7 +175,10 @@ INSERT INTO `payment_info` (`id`, `user_id`, `first_name`, `last_name`, `address
 (30, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
 (31, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
 (32, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
-(33, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111);
+(33, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(34, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/20', 111),
+(35, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111),
+(36, 4, 'jakob', 'blinkilde', 'test', '111', 'Danmark', '3400', 'jab@bb.dk', 111, '11/11/2020', 111);
 
 -- --------------------------------------------------------
 
@@ -366,19 +376,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `order_lines`
 --
 ALTER TABLE `order_lines`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `payment_info`
 --
 ALTER TABLE `payment_info`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `products`
